@@ -1,0 +1,39 @@
+// RP Code:
+// import './busInterface';
+const busInterface = require('./busInterface');
+
+// import busEventEmitter from './eventEmitter';
+const busEventEmitter = require('./eventEmitter');
+
+const userDirectoryInterface = require('./userDirectoryInterface');
+
+// Wait for all event.
+busEventEmitter.on('success', function(event) {
+  // Get requestId from event
+  const requestId = event.requestId;
+  const resultCode = event.resultCode;
+  const resultMsg = event.resultMsg;
+
+  console.log("Authentication success");
+  console.log("request id: " + requestId + ", code: " + resultCode + ", msg: " + resultMsg);
+});
+
+busEventEmitter.on('error', function(error) {
+  const requestId = error.requestId;
+  const errorCode = error.code;
+  const errorMsg = error.message;
+
+  console.error("Error request id: " + requestId + ", code: " + 
+      errorCode + ", msg: " + errorMsg);
+});
+
+const IDENTIFICATION_NUMBER = '1100023145268';
+
+// Read the user directory
+const user = userDirectoryInterface.getId(IDENTIFICATION_NUMBER);
+
+// simulate request every 1 second
+setInterval(() => {
+  const requestId = busInterface.createIdpRequest(user);
+  console.log("Request sent with request ID: " + requestId)
+}, 1000);
