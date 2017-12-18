@@ -1,4 +1,4 @@
-const busEventEmitter = require('./eventEmitter');
+import busEventEmitter from './eventEmitter';
 
 let requestId = 0;
 
