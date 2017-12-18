@@ -1,5 +1,5 @@
-const EventEmitter = require('events');
+import EventEmitter from 'events';
 
 const eventEmitter = new EventEmitter();
 
-module.exports = eventEmitter;
+export default eventEmitter;
