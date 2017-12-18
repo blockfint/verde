@@ -1,11 +1,12 @@
 // RP Code:
-// import './busInterface';
-const busInterface = require('./busInterface');
+// const busInterface = require('./busInterface');
+import busInterface from './busInterface';
 
-// import busEventEmitter from './eventEmitter';
-const busEventEmitter = require('./eventEmitter');
+// const busEventEmitter = require('./eventEmitter');
+import busEventEmitter from './eventEmitter';
 
-const userDirectoryInterface = require('./userDirectoryInterface');
+// const userDirectoryInterface = require('./userDirectoryInterface');
+import * as userDirectoryInterface from './userDirectoryInterface';
 
 // Wait for all event.
 busEventEmitter.on('success', function(event) {
@@ -33,7 +34,7 @@ const IDENTIFICATION_NUMBER = '1100023145268';
 const user = userDirectoryInterface.getId(IDENTIFICATION_NUMBER);
 
 // simulate request every 1 second
-setInterval(() => {
-  const requestId = busInterface.createIdpRequest(user);
-  console.log("Request sent with request ID: " + requestId)
-}, 1000);
+// setInterval(() => {
+//   const requestId = busInterface.createIdpRequest(user);
+//   console.log("Request sent with request ID: " + requestId)
+// }, 1000);

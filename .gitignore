@@ -1,0 +1,12 @@
+build/
+*.swp
+orientdb-community-importers-2.2.27/
+# node.js
+#
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# OSX
+#
+.DS_Store
