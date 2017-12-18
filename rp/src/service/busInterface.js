@@ -1,4 +1,8 @@
 const busEventEmitter = require('./eventEmitter');
+const ipc = require('node-ipc');
+ipc.config.id = 'rp';
+ipc.config.retry = 1500;
+ipc.config.silent = true;
 
 let requestId = 0;
 
@@ -23,6 +27,18 @@ let requestId = 0;
 // TO-DO
 // interface with bus/blockchain
 
+function handleApprove(requestId) {
+  busEventEmitter.emit('success', {
+    requestId: requestId
+  });
+}
+
+function handleDeny(requestId) {
+  busEventEmitter.emit('error', {
+    requestId: requestId
+  });
+}
+
 module.exports = {
   createIdpRequest: function(user) {
     // TO-DO
@@ -32,13 +48,24 @@ module.exports = {
 
     // simulate task which uses 1.5 second to complete
     setTimeout(function() {
-      busEventEmitter.emit('success', {
+      /*busEveneEmitter.emit('success', {
         requestId: requestIdToUse,
         resultCode: 999,
         resultMsg: "Some message for user: " + user.name + " " + user.lastname
+      });*/
+      ipc.of.bus.emit('createRequest',{
+        userId: user.id,
+        requestId: requestIdToUse,
+        data: user
       });
     }, 1500);
     
     return requestIdToUse;
   }
 }
+
+ipc.connectToNet('bus',function() {
+  console.log('Connect to bus');
+  ipc.of.bus.on('approve',handleApprove);
+  ipc.of.bus.on('deny',handleDeny);
+})

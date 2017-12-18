@@ -1,6 +1,7 @@
 export const getId = (userId) => {
   return {
     name: 'Foo',
-    lastname: 'Bar'
+    lastname: 'Bar',
+    id: 'someID'
   };
 };
