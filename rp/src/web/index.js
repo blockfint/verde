@@ -6,7 +6,7 @@ import https from 'https';
 import bodyParser from 'body-parser';
 
 import express from 'express';
-import morgan from 'morgan';
+// import morgan from 'morgan';
 
 import router from './router';
 
@@ -25,7 +25,7 @@ app.use('/', express.static(path.join(__dirname, '../../web_files')));
 app.use(bodyParser.urlencoded({ extended: false, limit: '2mb' }));
 app.use(bodyParser.json({ limit: '2mb' }));
 
-app.use(morgan('combined'));
+// app.use(morgan('combined'));
 
 app.use(router);
 
