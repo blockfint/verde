@@ -12,7 +12,7 @@ function approve(data) {
   }
 }
 
-function deny(requestId) {
+function deny(data) {
   if(ipc.of.bus) {
     ipc.of.bus.emit('deny',data)
   }

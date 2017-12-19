@@ -40,7 +40,7 @@ function approve(data) {
   ipc.server.broadcast('approve',data.requestId);
 }
 
-function deny(requestId) {
+function deny(data) {
   updateDB({
     approve: false,
     ...data
