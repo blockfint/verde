@@ -1,4 +1,3 @@
-// RP Code:
 // const busInterface = require('./busInterface');
 import busInterface from './busInterface';
 
@@ -36,6 +35,7 @@ const user = userDirectoryInterface.getId(IDENTIFICATION_NUMBER);
 export const requestAuthen = () => {
   const requestId = busInterface.createIdpRequest(user);
   console.log("Request sent with request ID: " + requestId);
+  return requestId;
 };
 
 // simulate request every 1 second
