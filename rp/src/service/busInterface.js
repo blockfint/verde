@@ -1,5 +1,5 @@
 import busEventEmitter from './eventEmitter';
-import ipc = from 'node-ipc';
+import ipc from 'node-ipc';
 ipc.config.id = 'rp';
 ipc.config.retry = 1500;
 ipc.config.silent = true;

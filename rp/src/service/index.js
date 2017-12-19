@@ -35,6 +35,6 @@ const user = userDirectoryInterface.getId(IDENTIFICATION_NUMBER);
 
 // simulate request every 1 second
 // setInterval(() => {
-//   const requestId = busInterface.createIdpRequest(user);
-//   console.log("Request sent with request ID: " + requestId)
+   const requestId = busInterface.createIdpRequest(user);
+   console.log("Request sent with request ID: " + requestId)
 // }, 1000);
