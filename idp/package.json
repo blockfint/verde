@@ -1,12 +1,10 @@
 {
-  "name": "verde-rp",
+  "name": "verde-idp",
   "version": "1.0.0",
   "description": "",
   "author": "WS3/Blockfint",
-  "main": "src/index.js",
+  "main": "index.js",
   "scripts": {
-    "build": "./node_modules/.bin/babel src -d ./build/ --source-maps inline",
-    "start": "npm run build && node ./build/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
