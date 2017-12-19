@@ -1,4 +1,4 @@
 import 'source-map-support/register';
 
-import './service';
+import './greenBoxApi';
 import './web';
