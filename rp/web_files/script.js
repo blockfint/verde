@@ -6,8 +6,11 @@ const socket = io('http://localhost:8080');
 
 let requestId = null;
 
+const status = document.getElementById('status');
+
 const verifyButton = document.getElementById('verify');
 verifyButton.addEventListener('click', (event) => {
+  status.textContent = 'Pending...';
   status.style = '';
   fetch('/verifyIdentity').then((response) => {
     return response.json();
@@ -15,8 +18,6 @@ verifyButton.addEventListener('click', (event) => {
     requestId = json.requestId;
   });
 });
-
-const status = document.getElementById('status');
 
 socket.on('success', function(data){
   if (parseInt(data.requestId) === requestId) {
