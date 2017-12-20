@@ -3,7 +3,7 @@ ipc.config.id = 'idp';
 ipc.config.retry = 1500;
 ipc.config.silent = true;
 
-function approve(data) {
+export function approve(data) {
   if(ipc.of.bus) {
     ipc.of.bus.emit('approve',data)
   }
@@ -12,7 +12,7 @@ function approve(data) {
   }
 }
 
-function deny(data) {
+export function deny(data) {
   if(ipc.of.bus) {
     ipc.of.bus.emit('deny',data)
   }
@@ -30,21 +30,24 @@ function deny(data) {
   }
 }*/
 
-module.exports = {
+
+export function listen(handleRequest,handleDB) {
+  ipc.connectToNet('bus',function() {
+    //console.log(ipc.of.bus.socket);
+    //if(ipc.of.bus.socket.id) {
+      //console.log('connected to bus');
+      ipc.of.bus.on('connect',() => {console.log('Connected to bus')});
+      ipc.of.bus.on('error',() => {console.log('Cannot connect to bus')});
+      ipc.of.bus.on('newRequest',handleRequest);
+      ipc.of.bus.on('dbChanged',handleDB);
+    //}
+    //else console.error('Cannot connect');
+  });
+}
+
+const busInterface = {
   approve: approve,
   deny: deny,
-
-  listen: function(handleRequest,handleDB) {
-    ipc.connectToNet('bus',function() {
-      //console.log(ipc.of.bus.socket);
-      //if(ipc.of.bus.socket.id) {
-        //console.log('connected to bus');
-        ipc.of.bus.on('connect',() => {console.log('Connected to bus')});
-        ipc.of.bus.on('error',() => {console.log('Cannot connect to bus')});
-        ipc.of.bus.on('newRequest',handleRequest);
-        ipc.of.bus.on('dbChanged',handleDB);
-      //}
-      //else console.error('Cannot connect');
-    });
-  }
-}
+  listen: listen
+};
+export default busInterface; 

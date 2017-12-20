@@ -1,4 +1,4 @@
-const busInterface = require('./busInterface');
+import busInterface from './busInterface';
 
 var db = {};
 
@@ -13,14 +13,13 @@ function handleDB(_db) {
   //console.log(db);
 }
 
-function getList(userId) {
-  return db[userId];
-}
-
 //===== listen to Bus =====
 busInterface.listen(handleRequest,handleDB);
 
-module.exports = {
-  ...busInterface,
-  getList: getList
+export const approve = busInterface.approve;
+export const deny = busInterface.deny;
+
+export function getList(userId) {
+  return db[userId];
 }
+
