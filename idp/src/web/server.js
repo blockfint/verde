@@ -23,8 +23,8 @@ app.use(bodyParser.json({ limit: '2mb' }));
 
 // app.use(morgan('combined'));
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../../web_files/index.html'));
+app.get('/home/:userId', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../web_files/index.html'));
 });
 
 app.get('/getList/:userId', function(req,res) {
