@@ -9,6 +9,10 @@
     "start": "npm run build && node ./build/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git@tahoe.mtviewsystem.com:digital-id/verde.git"
+  },
   "dependencies": {
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
