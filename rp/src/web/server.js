@@ -6,7 +6,10 @@ import bodyParser from 'body-parser';
 import express from 'express';
 // import morgan from 'morgan';
 
+import io from 'socket.io';
+
 import * as GreenBoxAPI from '../greenBoxApi';
+import busEventEmitter from '../greenBoxApi/eventEmitter';
 
 process.on('unhandledRejection', function(reason, p) {
   console.error('Unhandled Rejection:', p, '\nreason:', reason.stack || reason);
@@ -35,6 +38,29 @@ app.get('/verifyIdentity', (req, res) => {
 });
 
 const server = http.createServer(app);
+
+/**
+ * WebSocket
+ */
+const ws = io(server);
+let socket;
+
+ws.on('connection', function(_socket){
+  socket = _socket;
+});
+
+busEventEmitter.on('success', function(event) {
+  if (socket) {
+    socket.emit('success', { requestId: event.requestId });
+  }
+});
+
+busEventEmitter.on('error', function(event) {
+  if (socket) {
+    socket.emit('fail', { requestId: event.requestId });
+  }
+});
+
 server.listen(WEB_SERVER_PORT);
 
 console.log(`RP Web Server is running. Listening to port ${WEB_SERVER_PORT}`);
