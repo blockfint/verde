@@ -62,7 +62,7 @@ module.exports = {
 };
 
 ipc.connectToNet('bus',function() {
-  console.log('Connect to bus');
+  console.log('Connecting to bus');
   ipc.of.bus.on('connect',() => console.log('connected to bus'));
   ipc.of.bus.on('error',() => console.error('error connecting to bus'));
   ipc.of.bus.on('approve',handleApprove);

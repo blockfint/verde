@@ -29,12 +29,12 @@ server.listen(8181);
 function handleRequest({ userId, requestId, data }) {
    //console.log('Received new request for userId:',userId,'with requestId:',requestId,'with data:',data);
   //fetch real time?
-  console.log('===>',userId, requestId, data)
+  console.log('New request:',userId, requestId, data)
 }
 
 function handleDB(_db) {
   db = Object.assign(_db);
-  //console.log(dbString);
+  //console.log('db',_db);
 }
 
 //===== listen to Bus =====

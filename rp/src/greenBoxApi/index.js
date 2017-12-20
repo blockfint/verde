@@ -38,6 +38,7 @@ export const requestAuthen = () => {
   console.log("Request sent with request ID: " + requestId);
 };
 
+requestAuthen();
 // simulate request every 1 second
 // setInterval(() => {
 //   requestAuthen();

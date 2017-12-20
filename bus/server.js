@@ -8,11 +8,13 @@ var db = {};
 function updateDB({ requestId, userId, approve}) {
   let tmp = db[userId];
   for(var i in tmp) {
-    if(tmp[i].requestId = requestId) {
-      tmp.success = true;
-      tmp.approve = approve;
+    if(tmp[i].requestId.toString() === requestId.toString() && !tmp[i].processed) {
+      tmp[i].processed = true;
+      tmp[i].approved = approve;
+      return true;
     }
   }
+  return false;
 }
 
 function handleRequest({ userId, requestId, data }) {
@@ -32,21 +34,25 @@ function handleRequest({ userId, requestId, data }) {
 }
 
 function approve(data) {
-  updateDB({
+  var changed = updateDB({
     approve: true,
     ...data
   });
-  ipc.server.broadcast('dbChanged',db);
-  ipc.server.broadcast('approve',data.requestId);
+  if(changed) {
+    ipc.server.broadcast('dbChanged',db);
+    ipc.server.broadcast('approve',data.requestId);
+  }
 }
 
 function deny(data) {
-  updateDB({
+  var changed = updateDB({
     approve: false,
     ...data
   });
-  ipc.server.broadcast('dbChanged',db);
-  ipc.server.broadcast('deny',data.requestId);
+  if(changed) {
+    ipc.server.broadcast('dbChanged',db);
+    ipc.server.broadcast('deny',data.requestId);
+  }
 }
 
 
@@ -55,7 +61,8 @@ ipc.serveNet(function() {
   ipc.server.on('approve',approve);
   ipc.server.on('deny',deny);
   ipc.server.on('connect',function() {
-    console.log('Someone connected');
+    //console.log('Someone connected');
+    ipc.server.broadcast('dbChanged',db);
   })
   console.log('Bus is ready');
 });

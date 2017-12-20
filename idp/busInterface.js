@@ -39,6 +39,8 @@ module.exports = {
       //console.log(ipc.of.bus.socket);
       //if(ipc.of.bus.socket.id) {
         //console.log('connected to bus');
+        ipc.of.bus.on('connect',() => {console.log('Connected to bus')});
+        ipc.of.bus.on('error',() => {console.log('Cannot connect to bus')});
         ipc.of.bus.on('newRequest',handleRequest);
         ipc.of.bus.on('dbChanged',handleDB);
       //}
