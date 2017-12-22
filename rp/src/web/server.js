@@ -9,7 +9,7 @@ import express from 'express';
 import io from 'socket.io';
 
 import * as GreenBoxAPI from '../greenBoxApi';
-import busEventEmitter from '../greenBoxApi/eventEmitter';
+import * as busInterface from '../greenBoxApi/busInterface';
 
 process.on('unhandledRejection', function(reason, p) {
   console.error('Unhandled Rejection:', p, '\nreason:', reason.stack || reason);
@@ -49,13 +49,13 @@ ws.on('connection', function(_socket){
   socket = _socket;
 });
 
-busEventEmitter.on('success', function(event) {
+busInterface.event.on('success', function(event) {
   if (socket) {
     socket.emit('success', { requestId: event.requestId });
   }
 });
 
-busEventEmitter.on('error', function(event) {
+busInterface.event.on('error', function(event) {
   if (socket) {
     socket.emit('fail', { requestId: event.requestId });
   }

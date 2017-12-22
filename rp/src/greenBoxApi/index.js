@@ -1,14 +1,11 @@
 // const busInterface = require('./busInterface');
-import busInterface from './busInterface';
-
-// const busEventEmitter = require('./eventEmitter');
-import busEventEmitter from './eventEmitter';
+import * as busInterface from './busInterface';
 
 // const userDirectoryInterface = require('./userDirectoryInterface');
 import * as userDirectoryInterface from './userDirectoryInterface';
 
 // Wait for all event.
-busEventEmitter.on('success', function(event) {
+busInterface.event.on('success', function(event) {
   // Get requestId from event
   const requestId = event.requestId;
   const resultCode = event.resultCode;
@@ -18,7 +15,7 @@ busEventEmitter.on('success', function(event) {
   console.log("request id: " + requestId + ", code: " + resultCode + ", msg: " + resultMsg);
 });
 
-busEventEmitter.on('error', function(error) {
+busInterface.event.on('error', function(error) {
   const requestId = error.requestId;
   const errorCode = error.code;
   const errorMsg = error.message;
@@ -37,9 +34,3 @@ export const requestAuthen = (hideSourceRpId) => {
   console.log("Request sent with request ID: " + requestId);
   return requestId;
 };
-
-// requestAuthen();
-// simulate request every 1 second
-// setInterval(() => {
-//   requestAuthen();
-// }, 1000);
