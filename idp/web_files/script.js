@@ -6,7 +6,9 @@ function updateRequestList(json) {
     if(!requestObject.processed) addRequest(requestObject,list)
     else {
       let tmpDiv = document.createElement("div");
-      tmpDiv.innerHTML = JSON.stringify(requestObject);
+      var displayData = Object.assign({}, requestObject);
+      delete displayData.userId;
+      tmpDiv.innerHTML = JSON.stringify(displayData);
       if(requestObject.approved) approved.appendChild(tmpDiv);
       else denied.appendChild(tmpDiv);
     }
@@ -47,9 +49,11 @@ function addRequestButton(userId,requestId,action) {
 
 function addRequest(requestObject,divElement) {
   var tmpDiv = document.createElement("div");
-  tmpDiv.innerHTML = JSON.stringify(requestObject);
-  tmpDiv.appendChild(addRequestButton(requestObject.id,requestObject.requestId,'approve'));
-  tmpDiv.appendChild(addRequestButton(requestObject.id,requestObject.requestId,'deny'));
+  var displayData = Object.assign({}, requestObject);
+  delete displayData.userId;
+  tmpDiv.innerHTML = JSON.stringify(displayData);
+  tmpDiv.appendChild(addRequestButton(requestObject.userId,requestObject.requestId,'approve'));
+  tmpDiv.appendChild(addRequestButton(requestObject.userId,requestObject.requestId,'deny'));
 
   divElement.appendChild(tmpDiv);
 

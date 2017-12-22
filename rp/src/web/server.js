@@ -31,7 +31,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/verifyIdentity', (req, res) => {
-  const requestId = GreenBoxAPI.requestAuthen();
+  const requestId = GreenBoxAPI.requestAuthen(req.query.hideSourceRp === 'true');
   res.status(200).send({
     requestId,
   });

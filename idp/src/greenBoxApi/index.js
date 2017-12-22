@@ -2,8 +2,17 @@ import busInterface from './busInterface';
 
 var cacheDB = {};
 
-function handleRequest({ userId, requestId, data }) {
-   console.log('Received new request for userId:',userId,'with requestId:',requestId,'with data:',data);
+function handleRequest({ userId, requestId, rpId, data }) {
+  console.log(
+    'Received new request for userId:',
+    userId,
+    'with requestId:',
+    requestId,
+    'from rpId:',
+    rpId,
+    'with data:',
+    data
+  );
   //fetch real time?
 }
 
@@ -13,7 +22,7 @@ function handleDB(_db) {
 }
 
 //===== listen to Bus =====
-busInterface.listen(handleRequest,handleDB);
+busInterface.listen(handleRequest, handleDB);
 
 export const approve = busInterface.approve;
 export const deny = busInterface.deny;
@@ -25,6 +34,6 @@ export function getList(userId) {
 const exp = {
   approve: approve,
   deny: deny,
-  getList: getList
-}
+  getList: getList,
+};
 export default exp;

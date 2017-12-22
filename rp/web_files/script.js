@@ -19,15 +19,26 @@ verifyButton.addEventListener('click', (event) => {
   });
 });
 
+const verifyHideSourceRpButton = document.getElementById('verifyHideSourceRp');
+verifyHideSourceRpButton.addEventListener('click', (event) => {
+  status.textContent = 'Pending...';
+  status.style = '';
+  fetch('/verifyIdentity?hideSourceRp=true').then((response) => {
+    return response.json();
+  }).then((json) => {
+    requestId = json.requestId;
+  });
+});
+
 socket.on('success', function(data){
-  if (parseInt(data.requestId) === requestId) {
+  if (data.requestId === requestId) {
     status.textContent = 'Success!';
     requestId = null;
   }
 });
 
 socket.on('fail', function(data){
-  if (parseInt(data.requestId) === requestId) {
+  if (data.requestId === requestId) {
     status.textContent = 'Failed!';
     requestId = null;
   }

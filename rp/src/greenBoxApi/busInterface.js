@@ -1,10 +1,13 @@
 import busEventEmitter from './eventEmitter';
+import crypto from 'crypto';
 import ipc from 'node-ipc';
 ipc.config.id = 'rp';
 ipc.config.retry = 1500;
 ipc.config.silent = true;
 
-let requestId = 0;
+function generateRequestId() {
+  return crypto.randomBytes(20).toString('hex');
+}
 
 // simulate success event
 // setInterval(() => {
@@ -40,24 +43,25 @@ function handleDeny(requestId) {
 }
 
 module.exports = {
-  createIdpRequest: function(user) {
+  createIdpRequest: function(user, hideSourceRpId = false) {
     // TO-DO
     // do something with blockchain
     
-    let requestIdToUse = ++requestId;
+    let requestId = generateRequestId();
 
     /*busEveneEmitter.emit('success', {
-      requestId: requestIdToUse,
+      requestId: requestId,
       resultCode: 999,
       resultMsg: "Some message for user: " + user.name + " " + user.lastname
     });*/
     ipc.of.bus.emit('createRequest',{
       userId: user.id,
-      requestId: requestIdToUse,
-      data: user
+      requestId: requestId,
+      rpId: hideSourceRpId ? null : 1,
+      // data: user,
     });
     
-    return requestIdToUse;
+    return requestId;
   }
 };
 

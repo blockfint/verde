@@ -32,13 +32,13 @@ const IDENTIFICATION_NUMBER = '1100023145268';
 // Read the user directory
 const user = userDirectoryInterface.getId(IDENTIFICATION_NUMBER);
 
-export const requestAuthen = () => {
-  const requestId = busInterface.createIdpRequest(user);
+export const requestAuthen = (hideSourceRpId) => {
+  const requestId = busInterface.createIdpRequest(user, hideSourceRpId);
   console.log("Request sent with request ID: " + requestId);
   return requestId;
 };
 
-requestAuthen();
+// requestAuthen();
 // simulate request every 1 second
 // setInterval(() => {
 //   requestAuthen();
