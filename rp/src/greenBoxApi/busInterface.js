@@ -4,6 +4,8 @@ import ipc from 'node-ipc';
 
 export const event = new EventEmitter();
 
+const RP_ID = process.env.RP_ID || 1;
+
 ipc.config.id = 'rp';
 ipc.config.retry = 1500;
 ipc.config.silent = true;
@@ -36,7 +38,7 @@ export const createIdpRequest = (user, idps, hideSourceRpId = false) => {
   ipc.of.bus.emit('createRequest',{
     userId: user.id,
     requestId: requestId,
-    rpId: hideSourceRpId ? null : parseInt(process.env.RP_ID) || 1,
+    rpId: hideSourceRpId ? null : RP_ID,
     // data: user,
   });
   
