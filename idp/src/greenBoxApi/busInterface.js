@@ -29,7 +29,7 @@ export function deny(data) {
 
 export function listen(handleRequest) {
 
-  ethereumInterface.newRequest.watch(/*filter by blockId*/function(error, requestData) {
+  ethereumInterface.watchRequestEvent(function(error, requestData) {
     if(!error) selfFilter(handleRequest,requestData)
   }); 
 
@@ -39,9 +39,12 @@ export async function getPendingList(userId) {
 
   return Promise(function(resolve,reject) {
     /*all event filter by userId and pending*/
-    ethereumInterface.newRequest.watch(function(error, pendingList) {
+    ethereumInterface.getPendingRequest(userId,function(error, pendingList) {
+      var list = []
       if(error) return reject(error);
-      resolve(pendingList)
+      resolve(pendingList.filter(requestData => 
+        requestData.idpRequestList.indexOf(selfId) !== -1)
+      );
     }
   });
 

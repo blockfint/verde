@@ -1,13 +1,20 @@
+import web3 from 'web3';
+
+var requestContract = //contract instance
+
 /*
  * Create a request.
  * Parameters
- *   userName : string
- *   requestText : string
+ *  requestObject: object
+ *    userId : string
+ *    requestText : string
+ *    idpRequestList: array of integer 
  * Returns
- *   requestID : string
+ *  requestID : string
 */
 
 function createRequest(requestObject) {
+  return requestContract.createRequest()
 }
 
 /* 
@@ -22,11 +29,27 @@ function createRequest(requestObject) {
  *       console.error(error);
  */
 
-function watchRequestEvent() {
+function watchRequestEvent(callback) {
+  requestContract.newRequest(callback)
 }
 
 function watchIDPResponseEvent() {
+  requestContract.idpResponse(callback)
 }
 
 function watchAuthenticationEvent() {
+  requestContract.authenticate(callback)
 }
+
+function getPendingRequest(userId,callback) {
+  requestContract.newRequest({ UID: userId },{ fromBlock: 0 }).get(callback)
+}
+
+export ethereumInterface = {
+  createRequest,
+  watchRequestEvent,
+  watchIDPResponseEvent,
+  watchAuthenticationEvent,
+  getPendingRequest
+}
+export default ethereumInterface;

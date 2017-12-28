@@ -27,17 +27,23 @@ app.get('/home/:userId', (req, res) => {
   res.sendFile(path.join(__dirname, '../../web_files/index.html'));
 });
 
-app.get('/getPendingList/:userId', function(req,res) {
-  res.send(GreenBoxAPI.getPendingList(req.params.userId));
+app.get('/getPendingList/:userId',async function(req,res) {
+  try {
+    res.send(await GreenBoxAPI.getPendingList(req.params.userId));
+  }
+  catch(error) {
+    console.error(error);
+    res.status(500).end();
+  }
 });
 
 app.post('/approve/', function(req,res) {
-  GreenBoxAPI.approve(req.body) //==================
+  GreenBoxAPI.approve(req.body)
   res.send('Success\n');
 });
 
 app.post('/deny/', function(req,res) {
-  GreenBoxAPI.deny(req.body) //==================
+  GreenBoxAPI.deny(req.body)
   res.send('Success\n');
 });
 
