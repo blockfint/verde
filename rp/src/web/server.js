@@ -83,3 +83,5 @@ busInterface.event.on('error', function(event) {
 server.listen(WEB_SERVER_PORT);
 
 console.log(`RP Web Server is running. Listening to port ${WEB_SERVER_PORT}`);
+
+console.log(`RP ID: ${process.env.RP_ID || 1}`);
