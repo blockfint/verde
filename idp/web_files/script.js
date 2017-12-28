@@ -18,7 +18,7 @@ function updateRequestList(json) {
 window.addEventListener('load', () => {
   var userId = window.location.href.split('/');
   userId = userId[userId.length-1];
-  fetch('/getList/' + userId).then((response) => {
+  fetch('/getPendingList/' + userId).then((response) => {
     return response.json();
   }).then((json) => {
     console.log(json);

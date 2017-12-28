@@ -12,7 +12,7 @@ process.on('unhandledRejection', function(reason, p) {
   console.error('Unhandled Rejection:', p, '\nreason:', reason.stack || reason);
 });
 
-const WEB_SERVER_PORT = 8181;
+const WEB_SERVER_PORT = process.env.SERVER_PORT || 8181;
 
 const app = express();
 
@@ -27,8 +27,8 @@ app.get('/home/:userId', (req, res) => {
   res.sendFile(path.join(__dirname, '../../web_files/index.html'));
 });
 
-app.get('/getList/:userId', function(req,res) {
-  res.send(GreenBoxAPI.getList(req.params.userId));
+app.get('/getPendingList/:userId', function(req,res) {
+  res.send(GreenBoxAPI.getPendingList(req.params.userId));
 });
 
 app.post('/approve/', function(req,res) {
