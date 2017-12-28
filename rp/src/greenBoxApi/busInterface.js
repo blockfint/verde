@@ -27,7 +27,7 @@ function handleDeny(requestId) {
   });
 }
 
-export const createIdpRequest = (user, hideSourceRpId = false) => {
+export const createIdpRequest = (user, idps, hideSourceRpId = false) => {
   // TO-DO
   // do something with blockchain
   
@@ -36,7 +36,7 @@ export const createIdpRequest = (user, hideSourceRpId = false) => {
   ipc.of.bus.emit('createRequest',{
     userId: user.id,
     requestId: requestId,
-    rpId: hideSourceRpId ? null : 1,
+    rpId: hideSourceRpId ? null : parseInt(process.env.RP_ID) || 1,
     // data: user,
   });
   
