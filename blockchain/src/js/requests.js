@@ -15,7 +15,11 @@ var requestContract = //contract instance
 
 function createRequest({ userId, requestText}) {
   // cast userId to hex
-  return requestContract.createRequest(userId,requestText,0);
+  return requestContract.createRequest.sendTransaction(userId,requestText,0);
+}
+
+function addIdpResponse({ requestId, approve }) {
+  requestContract.addIdpResponse.sendTransaction(requestId, approve.toString(), 'Mock up message');
 }
 
 /* 
@@ -51,6 +55,7 @@ export ethereumInterface = {
   watchRequestEvent,
   watchIDPResponseEvent,
   watchAuthenticationEvent,
-  getPendingRequest
+  getPendingRequest,
+  addIdpResponse
 }
 export default ethereumInterface;

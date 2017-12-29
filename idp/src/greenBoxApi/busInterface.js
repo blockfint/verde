@@ -1,4 +1,4 @@
-import ethereumInterface from './ethereumInterface';
+import ethereumInterface from '../../../blockchain/src/js/request';
 
 var selfId;
 var blockId = 0;
@@ -7,17 +7,22 @@ export function setSelfId(_selfId) {
   selfId = _selfId;
 }
 
+//check userAddress (userId) whether it concern this IDP
+function isConcern(userId) {
+  //assume all idp concern for all user now
+  return true;
+}
+
 function selfFilter(handleRequest,eventObject) {
   //if(requestData.idpRequestList.indexOf(selfId) !== -1) handleRequest(requestData);
   let { rpAddress, userAddress, requestText, requestID } = eventObject.args;
-  //check userAddress (userId) whether it concern myself
   //retrieve rpId from rpAddress
-  if(concern) handleRequest({
+  if(isConcern(userAddress)) handleRequest({
     userId: userAddress,
     requestId: requestID,
     requestText,
     rpId
-  })
+  });
 }
 
 export function approve(data) {
@@ -38,8 +43,8 @@ export function deny(data) {
 
 export function listen(handleRequest) {
 
-  ethereumInterface.watchRequestEvent(function(error, requestData) {
-    if(!error) selfFilter(handleRequest,requestData)
+  ethereumInterface.watchRequestEvent(function(error, eventObject) {
+    if(!error) selfFilter(handleRequest,eventObject)
   }); 
 
 }
