@@ -13,8 +13,9 @@ var requestContract = //contract instance
  *  requestID : string
 */
 
-function createRequest(requestObject) {
-  return requestContract.createRequest()
+function createRequest({ userId, requestText}) {
+  // cast userId to hex
+  return requestContract.createRequest(userId,requestText,0);
 }
 
 /* 
@@ -30,19 +31,19 @@ function createRequest(requestObject) {
  */
 
 function watchRequestEvent(callback) {
-  requestContract.newRequest(callback)
+  requestContract.Request(callback);
 }
 
-function watchIDPResponseEvent() {
-  requestContract.idpResponse(callback)
+function watchIDPResponseEvent(callback) {
+  requestContract.IdpResponse(callback)
 }
 
 function watchAuthenticationEvent() {
-  requestContract.authenticate(callback)
+  requestContract.AuthenticationComplete(callback)
 }
 
 function getPendingRequest(userId,callback) {
-  requestContract.newRequest({ UID: userId },{ fromBlock: 0 }).get(callback)
+  requestContract.Request({ UID: userId },{ fromBlock: 0 }).get(callback)
 }
 
 export ethereumInterface = {

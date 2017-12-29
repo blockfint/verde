@@ -7,8 +7,17 @@ export function setSelfId(_selfId) {
   selfId = _selfId;
 }
 
-function selfFilter(handleRequest,requestData) {
-  if(requestData.idpRequestList.indexOf(selfId) !== -1) handleRequest(requestData);
+function selfFilter(handleRequest,eventObject) {
+  //if(requestData.idpRequestList.indexOf(selfId) !== -1) handleRequest(requestData);
+  let { rpAddress, userAddress, requestText, requestID } = eventObject.args;
+  //check userAddress (userId) whether it concern myself
+  //retrieve rpId from rpAddress
+  if(concern) handleRequest({
+    userId: userAddress,
+    requestId: requestID,
+    requestText,
+    rpId
+  })
 }
 
 export function approve(data) {
