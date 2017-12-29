@@ -3,6 +3,8 @@ const Web3 = require('web3')
 export default class {
   constructor (Registers, registersAddress, provider, fromAddress) {
     this.web3 = new Web3(provider)
+    this.fromAddress = fromAddress
+    this.provider = provider
 
     Registers.setProvider(provider)
     Registers.defaults({
@@ -27,6 +29,10 @@ export default class {
 
   getRequestCount() {
     return this.registers.getRequestCount();
+  }
+
+  addIdpResponse(code, status) {
+    return this.registers.addIdpResponse(code, status);
   }
   /* 
   * Parameters

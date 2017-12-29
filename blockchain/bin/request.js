@@ -2,9 +2,9 @@
 import { default as yargs } from 'yargs'
 import { default as initializeLib } from '../index'
 
-const RPC_HOST = 'testrpc'
+const RPC_HOST = 'localhost'
 const RPC_PORT = '8545'
-const USER_NAME = 'Alan'
+const USER_NAME = '0x3355'
 const REQUEST_STRING = 'Pay for Blockfint ICO'
 const IDP_COUNT = 1
 
@@ -20,16 +20,21 @@ var args = yargs
       alias: 'p',
       default: RPC_PORT
     })
-    .option('name', {
-      description: 'The name you want to request for authentication',
-      alias: 'n',
-      default: USER_NAME,
+    .option('ra', {
+      description: 'The requests contract address',
       type: 'string'
     })
     .option('rp', {
       description: 'The RP account address to create request',
       type: 'string'
     })
+    .option('name', {
+      description: 'The user name you want to request for authentication',
+      alias: 'n',
+      default: USER_NAME,
+      type: 'string'
+    })
+    .demand(['ra', 'rp'])
   })
   .command('response', 'Response to the request', (yargs) => {
     return yargs.option('host', {
@@ -44,14 +49,17 @@ var args = yargs
     })
     .option('rid', {
       description: 'The request ID',
-      alias: 'r',
+      type: 'string'
+    })
+    .option('ra', {
+      description: 'The requests contract address',
       type: 'string'
     })
     .option('idp', {
       description: 'The IDP account address to response to the request',
       type: 'string'
     })
-    .demand(['rid'])
+    .demand(['rid', 'ra', 'idp'])
   })
   .help()
   .usage('Usage: $0 [command] [options]')
@@ -65,15 +73,21 @@ if (argv._.length === 0) {
 let command = argv._[0]
 
 if (command === 'create') {
-  let { name, host, port, rp } = argv
-  let requests = initializeLib(host, port)
-  requests.create(name, REQUEST_STRING, IDP_COUNT) 
+  console.log('CREATE ARGV' + JSON.stringify(argv))
+  let { name, host, port, rp, ra } = argv
+  let requests = initializeLib(host, port, ra, rp)
+  requests.createRequest(name, REQUEST_STRING, IDP_COUNT) 
     .then(() => console.log('Created request for ' + name))
+  requests.watchRequestEvent(function(a,b) {
+    console.log(a);
+    console.log(b);
+  })
 }
 
 if (command === 'response') {
-  let { host, port, rid, idp } = argv
-  let requests = initializeLib(host, port)
+  console.log('RESPONSE ARGV' + JSON.stringify(argv))
+  let { host, port, rid, idp, ra } = argv
+  let requests = initializeLib(host, port, ra, idp)
   requests.addIdpResponse(rid, 0, 'Authentication success')
     .then(() => console.log('Response success for request ID ' + rid))
 }
