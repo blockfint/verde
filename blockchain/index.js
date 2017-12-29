@@ -1,4 +1,4 @@
-import { default as RequestLib } from './lib/request_lib'
+import { default as RequestLib } from './lib/requests_lib'
 import { default as Web3 } from 'web3'
 import { default as contract } from 'truffle-contract'
 
