@@ -1,0 +1,27 @@
+{
+  "name": "greenbox-cli",
+  "version": "0.0.1",
+  "description": "CLI for GreenBox",
+  "scripts": {
+    "request": "babel-node ./bin/request.js",
+    "lint": "eslint ./"
+  },
+  "author": "Suttipong Nick Kanakakorn",
+  "devDependencies": {
+    "babel-cli": "^6.22.2",
+    "babel-eslint": "^6.1.2",
+    "babel-preset-env": "^1.1.8",
+    "babel-register": "^6.22.0",
+    "eslint": "^3.14.0",
+    "eslint-config-standard": "^6.0.0",
+    "eslint-plugin-babel": "^4.0.0",
+    "eslint-plugin-mocha": "^4.8.0",
+    "eslint-plugin-promise": "^3.0.0",
+    "eslint-plugin-standard": "^2.0.0",
+    "truffle-contract": "^1.0.5",
+    "web3": "^0.18.2",
+    "yargs": "^6.6.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0"
+  }
+}
