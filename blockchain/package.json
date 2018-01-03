@@ -4,6 +4,7 @@
   "description": "CLI for GreenBox",
   "scripts": {
     "request": "babel-node ./bin/request.js",
+    "build": "./node_modules/.bin/babel index.js -d ./build/ --source-maps inline && ./node_modules/.bin/babel lib -d ./build/lib --source-maps inline",
     "lint": "eslint ./"
   },
   "author": "Suttipong Nick Kanakakorn",

@@ -1,33 +1,7 @@
-import { idpInterface } from '../../../blockchain/lib/interface_lib';
-
-var selfId;
-var blockId = 0;
-
-export function setSelfId(_selfId) {
-  selfId = _selfId;
-}
-
-//check userAddress (userId) whether it concern this IDP
-function isConcern(userId) {
-  //assume all idp concern for all user now
-  return true;
-}
-
-function selfFilter(handleRequest,eventObject) {
-  //if(requestData.idpRequestList.indexOf(selfId) !== -1) handleRequest(requestData);
-  let { rpAddress, userAddress, requestText, requestID } = eventObject.args;
-  //retrieve rpId from rpAddress
-  if(isConcern(userAddress)) handleRequest({
-    userId: userAddress,
-    requestId: requestID,
-    requestText,
-    rpId
-  });
-}
+import { idpInterface } from '../../../blockchain/build/lib/interface_lib';
 
 export function approve(data) {
   idpInterface.addIdpResponse({
-    idpId: selfId,
     approve: true,
     ...data
   });
@@ -35,31 +9,22 @@ export function approve(data) {
 
 export function deny(data) {
   idpInterface.addIdpResponse({
-    idpId: selfId,
     approve: false,
     ...data
   });
 }
 
 export function listen(handleRequest) {
-
-  idpInterface.watchRequestEvent(function(error, eventObject) {
-    if(!error) selfFilter(handleRequest,eventObject)
-  }); 
-
+  idpInterface.watchRequestEvent(handleRequest);
 }
 
 export async function getPendingList(userId) {
 
   return Promise(function(resolve,reject) {
-    /*all event filter by userId and pending*/
-    idpInterface.getPendingRequest(userId,function(error, pendingList) {
-      var list = []
+    idpInterface.getPendingRequests(userId,function(error, pendingList) {
       if(error) return reject(error);
-      resolve(pendingList.filter(requestData => 
-        requestData.idpRequestList.indexOf(selfId) !== -1)
-      );
-    }
+      resolve(pendingList);
+    });
   });
 
 }

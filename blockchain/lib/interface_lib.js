@@ -5,9 +5,20 @@ const RPC_HOST = 'localhost';
 const RPC_PORT = '8545';
 const CONTRACT_ADDR = process.env.CONTRACT_ADDR;
 const IDP_ADDR = process.env.IDP_ADDR;
+const RP_ADDR = process.env.RP_ADDR;
+
+var idpContract, rpContract;
+
+if(!IDP_ADDR && !RP_ADDR) {
+  throw('Must specify RP_ADDR or IDP_ADDR');
+}
 
 //contract instance
-const requestContract = ethereum.initializeLib(RPC_HOST, RPC_PORT, CONTRACT_ADDR, IDP_ADDR);
+if(IDP_ADDR)
+  idpContract = ethereum.initializeLib(RPC_HOST, RPC_PORT, CONTRACT_ADDR, IDP_ADDR);
+
+if(RP_ADDR)
+  rpContract = ethereum.initializeLib(RPC_HOST, RPC_PORT, CONTRACT_ADDR, RP_ADDR);
 
 /*
  * Create a request.
@@ -22,11 +33,11 @@ const requestContract = ethereum.initializeLib(RPC_HOST, RPC_PORT, CONTRACT_ADDR
 
 function createRequest({ userId, requestText}) {
   //should return request id
-  return requestContract.createRequest(userId,requestText,0);
+  return rpContract.createRequest(userId,requestText,0);
 }
 
 function addIdpResponse({ requestId, approve }) {
-  requestContract.addIdpResponse(requestId, approve.toString(), 'Mock up message');
+  idpContract.addIdpResponse(requestId, approve.toString(), 'Mock up message');
 }
 
 /* 
@@ -42,22 +53,26 @@ function addIdpResponse({ requestId, approve }) {
  */
 
 function watchRequestEvent(callback) {
-  requestContract.watchRequestEvent(callback);
+  idpContract.watchRequestEvent(function(error, eventObject) {
+    if(error) return callback(error);
+    //filter only for those event concern IDP_ADDR
+    callback(null, eventObject)
+  });
 }
 
 function watchIDPResponseEvent(callback) {
-  //requestContract.IdpResponse(callback)
+  //rpContract.IdpResponse(callback)
 }
 
 function watchAuthenticationEvent() {
-  //requestContract.AuthenticationComplete(callback)
+  //rp.AuthenticationComplete(callback)
 }
 
 function getPendingRequest(userId,callback) {
-  return requestContract.getPendingRequest(userId,callback);
+  return idpContract.getPendingRequest(userId,callback);
 }
 
-export ethereumInterface = {
+export const ethereumInterface = {
   createRequest,
   watchRequestEvent,
   watchIDPResponseEvent,
@@ -66,13 +81,13 @@ export ethereumInterface = {
   addIdpResponse
 };
 
-export rpInterface = {
+export const rpInterface = {
   createRequest,
   watchIDPResponseEvent,
   watchAuthenticationEvent,
 };
 
-export idpInterface = {
+export const idpInterface = {
   watchRequestEvent,
   getPendingRequest,
   addIdpResponse
