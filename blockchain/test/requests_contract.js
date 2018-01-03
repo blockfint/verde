@@ -8,8 +8,9 @@ contract('Requests', function(accounts) {
       return requests.createRequest("0x1234","Release credit record", 1)
     }).then(function(rval) {
       console.log("rval " + rval);
-      return requests.getRequestCount.call();
+      return requests.getRequestCount();
     }).then(function(requestCount) {
+      console.log("count " + requestCount);
       assert.equal(requestCount, 1, "Count");
     });
   });
