@@ -2,7 +2,7 @@ var Requests = artifacts.require("./Requests.sol");
 
 contract('Requests', function(accounts) {
   let requests
-  it("should create a request", function() {
+  it("should create two requests", function() {
     return Requests.deployed().then(function(instance) {
       requests = instance;
       return requests.createRequest("0x1234","Release credit record", 1)
@@ -12,6 +12,12 @@ contract('Requests', function(accounts) {
     }).then(function(requestCount) {
       console.log("count " + requestCount);
       assert.equal(requestCount, 1, "Count");
+    }).then(function() {
+      requests.createRequest("0x1235","Own car?", 1)
+      return requests.getRequestCount();
+    }).then(function(requestCount) {
+      console.log("count " + requestCount);
+      assert.equal(requestCount, 2, "Count");
     });
   });
 });
