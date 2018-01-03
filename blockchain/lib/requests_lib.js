@@ -31,8 +31,8 @@ export default class {
     return this.registers.getRequestCount();
   }
 
-  addIdpResponse(code, status) {
-    return this.registers.addIdpResponse(code, status);
+  addIdpResponse(rid, code, status) {
+    return this.registers.addIdpResponse(rid, code, status);
   }
   /* 
   * Parameters
