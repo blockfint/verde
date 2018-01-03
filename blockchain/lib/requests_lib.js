@@ -49,4 +49,14 @@ export default class {
     var event = this.registers.Request()
     event.watch(callback);
   }
+
+  getPendingRequests(userAddress, callback) {
+    this.registers.Request({ userAddress: userAddress },{ fromBlock: 0 })
+    .get(function(error,logs) {
+      console.log('TEST getPendingRequests >>>>',logs);
+      //process logs before pass it to callback
+      //eg. check idp count, filter only unfinish, un-expire, ...
+      //callback(result);
+    });
+  }
 }
