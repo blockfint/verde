@@ -90,4 +90,5 @@ if (command === 'response') {
   let requests = initializeLib(host, port, ra, idp)
   requests.addIdpResponse(rid, 0, 'Authentication success')
     .then(() => console.log('Response success for request ID ' + rid))
+  requests.getPendingRequests(USER_NAME);
 }
