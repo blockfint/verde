@@ -1,6 +1,13 @@
 import web3 from 'web3';
+import ethereum from '../index';
 
-var requestContract = //contract instance
+const RPC_HOST = 'localhost';
+const RPC_PORT = '8545';
+const CONTRACT_ADDR = process.env.CONTRACT_ADDR;
+const IDP_ADDR = process.env.IDP_ADDR;
+
+//contract instance
+const requestContract = ethereum.initializeLib(RPC_HOST, RPC_PORT, CONTRACT_ADDR, IDP_ADDR);
 
 /*
  * Create a request.
@@ -14,12 +21,12 @@ var requestContract = //contract instance
 */
 
 function createRequest({ userId, requestText}) {
-  // cast userId to hex
-  return requestContract.createRequest.sendTransaction(userId,requestText,0);
+  //should return request id
+  return requestContract.createRequest(userId,requestText,0);
 }
 
 function addIdpResponse({ requestId, approve }) {
-  requestContract.addIdpResponse.sendTransaction(requestId, approve.toString(), 'Mock up message');
+  requestContract.addIdpResponse(requestId, approve.toString(), 'Mock up message');
 }
 
 /* 
@@ -35,19 +42,19 @@ function addIdpResponse({ requestId, approve }) {
  */
 
 function watchRequestEvent(callback) {
-  requestContract.Request(callback);
+  requestContract.watchRequestEvent(callback);
 }
 
 function watchIDPResponseEvent(callback) {
-  requestContract.IdpResponse(callback)
+  //requestContract.IdpResponse(callback)
 }
 
 function watchAuthenticationEvent() {
-  requestContract.AuthenticationComplete(callback)
+  //requestContract.AuthenticationComplete(callback)
 }
 
 function getPendingRequest(userId,callback) {
-  requestContract.Request({ UID: userId },{ fromBlock: 0 }).get(callback)
+  return requestContract.getPendingRequest(userId,callback);
 }
 
 export ethereumInterface = {
@@ -57,5 +64,18 @@ export ethereumInterface = {
   watchAuthenticationEvent,
   getPendingRequest,
   addIdpResponse
+};
+
+export rpInterface = {
+  createRequest,
+  watchIDPResponseEvent,
+  watchAuthenticationEvent,
+};
+
+export idpInterface = {
+  watchRequestEvent,
+  getPendingRequest,
+  addIdpResponse
 }
+
 export default ethereumInterface;

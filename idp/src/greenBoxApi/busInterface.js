@@ -1,4 +1,4 @@
-import ethereumInterface from '../../../blockchain/src/js/request';
+import { idpInterface } from '../../../blockchain/lib/interface_lib';
 
 var selfId;
 var blockId = 0;
@@ -26,7 +26,7 @@ function selfFilter(handleRequest,eventObject) {
 }
 
 export function approve(data) {
-  ethereumInterface.addIdpResponse({
+  idpInterface.addIdpResponse({
     idpId: selfId,
     approve: true,
     ...data
@@ -34,7 +34,7 @@ export function approve(data) {
 }
 
 export function deny(data) {
-  ethereumInterface.addIdpResponse({
+  idpInterface.addIdpResponse({
     idpId: selfId,
     approve: false,
     ...data
@@ -43,7 +43,7 @@ export function deny(data) {
 
 export function listen(handleRequest) {
 
-  ethereumInterface.watchRequestEvent(function(error, eventObject) {
+  idpInterface.watchRequestEvent(function(error, eventObject) {
     if(!error) selfFilter(handleRequest,eventObject)
   }); 
 
@@ -53,7 +53,7 @@ export async function getPendingList(userId) {
 
   return Promise(function(resolve,reject) {
     /*all event filter by userId and pending*/
-    ethereumInterface.getPendingRequest(userId,function(error, pendingList) {
+    idpInterface.getPendingRequest(userId,function(error, pendingList) {
       var list = []
       if(error) return reject(error);
       resolve(pendingList.filter(requestData => 
