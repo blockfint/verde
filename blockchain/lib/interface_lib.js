@@ -15,10 +15,10 @@ if(!IDP_ADDR && !RP_ADDR) {
 
 //contract instance
 if(IDP_ADDR)
-  idpContract = ethereum.initializeLib(RPC_HOST, RPC_PORT, CONTRACT_ADDR, IDP_ADDR);
+  idpContract = ethereum(RPC_HOST, RPC_PORT, CONTRACT_ADDR, IDP_ADDR);
 
 if(RP_ADDR)
-  rpContract = ethereum.initializeLib(RPC_HOST, RPC_PORT, CONTRACT_ADDR, RP_ADDR);
+  rpContract = ethereum(RPC_HOST, RPC_PORT, CONTRACT_ADDR, RP_ADDR);
 
 /*
  * Create a request.

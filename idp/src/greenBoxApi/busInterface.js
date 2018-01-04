@@ -15,7 +15,16 @@ export function deny(data) {
 }
 
 export function listen(handleRequest) {
-  idpInterface.watchRequestEvent(handleRequest);
+  idpInterface.watchRequestEvent(function(error,eventObject) {
+    if(error) throw error;
+    var { userAddress, requestID, rpAddress, requestText } = eventObject.args;
+    handleRequest({
+      userId: userAddress,
+      requestId: requestID,
+      rpId: rpAddress,
+      data: requestText
+    });
+  });
 }
 
 export async function getPendingList(userId) {
