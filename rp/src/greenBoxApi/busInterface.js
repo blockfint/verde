@@ -1,18 +1,9 @@
 import EventEmitter from 'events';
-import crypto from 'crypto';
-import ipc from 'node-ipc';
+import { rpInterface } from '../../../blockchain/build/lib/interface_lib';
 
 export const event = new EventEmitter();
 
-const RP_ID = process.env.RP_ID || 1;
-
-ipc.config.id = 'rp';
-ipc.config.retry = 1500;
-ipc.config.silent = true;
-
-function generateRequestId() {
-  return crypto.randomBytes(20).toString('hex');
-}
+//const RP_ID = process.env.RP_ID || 1;
 
 // TO-DO
 // interface with bus/blockchain
@@ -29,26 +20,28 @@ function handleDeny(requestId) {
   });
 }
 
-export const createIdpRequest = (user, idps, hideSourceRpId = false) => {
+export const createIdpRequest = async (user, idps, hideSourceRpId = false) => {
   // TO-DO
   // do something with blockchain
   
-  let requestId = generateRequestId();
+  let requestId = await rpInterface.createRequest({
+    userId: user.id,
+    requestText: 'Mockup request details'
+  }); 
 
-  ipc.of.bus.emit('createRequest',{
+  /*ipc.of.bus.emit('createRequest',{
     userId: user.id,
     requestId: requestId,
     rpId: hideSourceRpId ? null : RP_ID,
     // data: user,
-  });
+  });*/
   
   return requestId;
 };
 
-ipc.connectToNet('bus',function() {
-  console.log('Connecting to bus');
-  ipc.of.bus.on('connect',() => console.log('connected to bus'));
-  ipc.of.bus.on('error',() => console.error('error connecting to bus'));
-  ipc.of.bus.on('approve',handleApprove);
-  ipc.of.bus.on('deny',handleDeny);
+rpInterface.watchIDPResponseEvent(function(error, eventObject) {
+  if(error) console.error('error:',error);
+  //check whether approve or denied
+  //handleApprove(eventObject.requestId);
+  //handleDeny(eventObject.requestId);
 });

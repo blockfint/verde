@@ -23,7 +23,12 @@ export default class {
   */
   createRequest(userName, requestText, idpCount) {
     return this.registers.createRequest(
-      userName, requestText, idpCount).then(() => Promise.resolve(true))
+      userName, requestText, idpCount).then((result) => {
+        for(var i in result.logs) {
+          if(result.logs[i].event === 'LogRequest')
+            return Promise.resolve(result.logs[i].args.requestID);
+        }
+      })
       .catch(console.log.bind(console))
   }
 

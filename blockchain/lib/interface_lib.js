@@ -31,7 +31,7 @@ if(RP_ADDR)
  *  requestID : string
 */
 
-function createRequest({ userId, requestText}) {
+function createRequest({ userId, requestText }) {
   //should return request id
   return rpContract.createRequest(userId,requestText,0);
 }
