@@ -68,8 +68,8 @@ function watchAuthenticationEvent() {
   //rp.AuthenticationComplete(callback)
 }
 
-function getPendingRequest(userId,callback) {
-  return idpContract.getPendingRequest(userId,callback);
+function getPendingRequests(userId,callback) {
+  return idpContract.getPendingRequests(userId,callback);
 }
 
 export const ethereumInterface = {
@@ -77,7 +77,7 @@ export const ethereumInterface = {
   watchRequestEvent,
   watchIDPResponseEvent,
   watchAuthenticationEvent,
-  getPendingRequest,
+  getPendingRequests,
   addIdpResponse
 };
 
@@ -89,7 +89,7 @@ export const rpInterface = {
 
 export const idpInterface = {
   watchRequestEvent,
-  getPendingRequest,
+  getPendingRequests,
   addIdpResponse
 }
 

@@ -29,9 +29,18 @@ export function listen(handleRequest) {
 
 export async function getPendingList(userId) {
 
-  return Promise(function(resolve,reject) {
+  return new Promise(function(resolve,reject) {
     idpInterface.getPendingRequests(userId,function(error, pendingList) {
       if(error) return reject(error);
+      for(var i in pendingList) {
+        let { userAddress, requestID, rpAddress, requestText } = pendingList[i].args;
+        pendingList[i] = {
+          userId: userAddress,
+          requestId: requestID,
+          rpId: rpAddress,
+          data: requestText
+        }
+      }
       resolve(pendingList);
     });
   });

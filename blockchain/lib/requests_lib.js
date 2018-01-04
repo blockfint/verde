@@ -53,10 +53,10 @@ export default class {
   getPendingRequests(userAddress, callback) {
     this.registers.LogRequest({ userAddress: userAddress },{ fromBlock: 0 })
     .get(function(error,logs) {
-      console.log('TEST getPendingRequests >>>>',logs);
+      //console.log('TEST getPendingRequests >>>>',logs);
       //process logs before pass it to callback
       //eg. check idp count, filter only unfinish, un-expire, ...
-      //callback(result);
+      callback(error,logs);
     });
   }
 }

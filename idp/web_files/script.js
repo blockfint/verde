@@ -23,6 +23,8 @@ window.addEventListener('load', () => {
   }).then((json) => {
     console.log(json);
     updateRequestList(json);
+  }).catch(function(error) {
+    console.error(error,response);
   });
 });
 
