@@ -1,59 +1,56 @@
 pragma solidity ^0.4.17;
 
+import "request.sol";
+
 contract Requests {
 
   uint requestIndex = 0;
+  Request[] requestContracts;
+
+  event LogNewRequest(address rpAddress, address requestContract, uint index);
+  event LogRequest(address rpAddress, address userAddress, string requestText,
+    uint idpCount, address requestID);
+
   function createRequest(
     address _userAddress,
+    // The _requestText is temporary. It will be moved to stay out of the
+    // request later.
     string _requestText,
     uint _idpCount
-    ) public returns (address requestID) {
+    ) public returns (Request requestID) {
         
-    address request_contract_address = address(requestIndex);
-    requestIndex += 1;
-    Request(msg.sender, _userAddress, _requestText, _idpCount, 
-            request_contract_address);
-    return request_contract_address;
+    address[] memory idpAddressList;
+    address[] memory asServiceAddressList;
+    string memory rpCondition;
+    Request requestContract;
+    requestContract = new Request(_userAddress, rpCondition,
+                                          _requestText, idpAddressList,
+                                          asServiceAddressList);
+    requestIndex = requestContracts.push(requestContract) - 1;
+    // Create request event.
+    LogRequest(msg.sender, _userAddress, _requestText, _idpCount, 
+               requestContract);
+    // Create new request event.
+    LogNewRequest(msg.sender, requestContract, requestIndex); 
+    return requestContract;
   }
 
-
-  event Request(address rpAddress, address userAddress, string requestText,
-    uint idpCount,
-    address requestID);
-  event AuthenticationComplete(address requestID, string code, string message);
-  event AuthenticationFail(address requestID, string code, string message);
-  event IdpResponse(address requestID, address idpAddress, 
-                    string code, string message);
-                    
   function getRequestCount() public view returns (uint count) {
-    return requestIndex;
+    return requestContracts.length;
+  }
+
+  function getRequest(uint index) public view returns (Request request) {
+    return requestContracts[index];
   }
 
   function addIdpResponse(address requestID, string code, string message) 
     public {
-        
-    IdpResponse(requestID, msg.sender, code, message);
+    // requestID.addIdpResponse(code, message);
+    // IdpResponse(requestID, msg.sender, code, message);
   }
 
+  event AuthenticationComplete(address requestID, string code, string message);
+  event AuthenticationFail(address requestID, string code, string message);
+  event IdpResponse(address requestID, address idpAddress, 
+                    string code, string message);
 }
-
-contract Response {
-  struct ResponseStruct {
-    uint code;
-    string msg;
-    uint index;
-  }
-
-  mapping(address => ResponseStruct) private responseStructs;
-  address[] responderIndex;
-
-  function addResponse(address _responder, uint _code, string _msg) 
-      public returns(uint index) {
-    responseStructs[_responder].code = _code;
-    responseStructs[_responder].msg = _msg;
-    responseStructs[_responder].index = responderIndex.push(_responder) - 1;
-    return responderIndex.length - 1;
-  }
-}
-
-
