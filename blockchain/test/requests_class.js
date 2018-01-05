@@ -21,13 +21,22 @@ contract('RequestsLib', function(accounts) {
   let requestCount
   it("should create a request", function() {
     requestCount = requestsLib.getRequestCount();
-    return requestsLib.createRequest("0x1234","Release credit record", 1)
-    }).then(function(rval) {
+    return (async () => {
+      const rval = await requestsLib.createRequest("0x1234","Release credit record", 1);
       // console.log("rval " + rval);
-      return requestsLib.getRequestCount();
-    }).then(function(requestCount) {
+
+      const requestCount = await requestsLib.getRequestCount();
       console.log("requestCount:" + requestCount);
       assert.equal(requestCount, 1, "Count");
-    });
+    })();
+
+    // requestsLib.createRequest("0x1234","Release credit record", 1)
+    // .then(function(rval) {
+    //   // console.log("rval " + rval);
+    //   return requestsLib.getRequestCount();
+    // }).then(function(requestCount) {
+    //   console.log("requestCount:" + requestCount);
+    //   assert.equal(requestCount, 1, "Count");
+    // });
   });
 });
