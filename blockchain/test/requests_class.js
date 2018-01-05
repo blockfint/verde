@@ -18,17 +18,15 @@ contract('RequestsLib', function(accounts) {
     }).then(() => done())
   })
 
-  let requestCount
-  it("should create a request", function() {
-    requestCount = requestsLib.getRequestCount();
-    return (async () => {
-      const rval = await requestsLib.createRequest("0x1234","Release credit record", 1);
-      // console.log("rval " + rval);
+  it("should create a request", async () => {
+    let requestCount = await requestsLib.getRequestCount();
 
-      const requestCount = await requestsLib.getRequestCount();
-      console.log("requestCount:" + requestCount);
-      assert.equal(requestCount, 1, "Count");
-    })();
+    const rval = await requestsLib.createRequest("0x1234","Release credit record", 1);
+    // console.log("rval " + rval);
+
+    requestCount = await requestsLib.getRequestCount();
+    console.log("requestCount:" + requestCount);
+    assert.equal(requestCount, 1, "Count");
 
     // requestsLib.createRequest("0x1234","Release credit record", 1)
     // .then(function(rval) {
