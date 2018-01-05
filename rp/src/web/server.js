@@ -30,8 +30,8 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../../../web_files/index.html'));
 });
 
-app.post('/verifyIdentity', (req, res) => {
-  const requestId = GreenBoxAPI.requestAuthen(req.body.selectedIdps, req.body.hideSourceRp);
+app.post('/verifyIdentity', async (req, res) => {
+  const requestId = await GreenBoxAPI.requestAuthen(req.body.selectedIdps, req.body.hideSourceRp);
   res.status(200).send({
     requestId,
   });

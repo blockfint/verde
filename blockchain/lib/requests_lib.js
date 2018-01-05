@@ -23,7 +23,12 @@ export default class {
   */
   createRequest(userName, requestText, idpCount) {
     return this.registers.createRequest(
-      userName, requestText, idpCount).then(() => Promise.resolve(true))
+      userName, requestText, idpCount).then((result) => {
+        for(var i in result.logs) {
+          if(result.logs[i].event === 'LogRequest')
+            return Promise.resolve(result.logs[i].args.requestID);
+        }
+      })
       .catch(console.log.bind(console))
   }
 
@@ -46,17 +51,22 @@ export default class {
   *       console.error(error);
   */
   watchRequestEvent(callback) {
-    var event = this.registers.Request()
+    var event = this.registers.LogRequest();
+    event.watch(callback);
+  }
+
+  watchIdpEvent(callback) {
+    var event = this.registers.IdpResponse();
     event.watch(callback);
   }
 
   getPendingRequests(userAddress, callback) {
-    this.registers.Request({ userAddress: userAddress },{ fromBlock: 0 })
+    this.registers.LogRequest({ userAddress: userAddress },{ fromBlock: 0 })
     .get(function(error,logs) {
-      console.log('TEST getPendingRequests >>>>',logs);
+      //console.log('TEST getPendingRequests >>>>',logs);
       //process logs before pass it to callback
       //eg. check idp count, filter only unfinish, un-expire, ...
-      //callback(result);
+      callback(error,logs);
     });
   }
 }

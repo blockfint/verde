@@ -1,6 +1,6 @@
 pragma solidity ^0.4.17;
 
-import 'response.sol';
+import './response.sol';
 
 // Simple Condition contract that the function isComplete is true when minimum
 // response OK count is met. This is pretty much and condition only.

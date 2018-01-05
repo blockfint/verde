@@ -1,6 +1,6 @@
 pragma solidity ^0.4.17;
 
-import "request.sol";
+import "./request.sol";
 
 contract Requests {
 

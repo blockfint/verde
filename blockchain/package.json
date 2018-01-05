@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "description": "CLI for GreenBox",
   "scripts": {
+    "compile": "truffle compile",
     "request": "babel-node ./bin/request.js",
+    "build": "./build.sh",
     "lint": "eslint ./"
   },
   "author": "Suttipong Nick Kanakakorn",

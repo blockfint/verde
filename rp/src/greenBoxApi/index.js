@@ -29,8 +29,8 @@ const IDENTIFICATION_NUMBER = '1100023145268';
 // Read the user directory
 const user = userDirectoryInterface.getId(IDENTIFICATION_NUMBER);
 
-export const requestAuthen = (idps, hideSourceRpId) => {
-  const requestId = busInterface.createIdpRequest(user, idps, hideSourceRpId);
+export const requestAuthen = async (idps, hideSourceRpId) => {
+  const requestId = await busInterface.createIdpRequest(user, idps, hideSourceRpId);
   console.log("Request sent with request ID: " + requestId);
   return requestId;
 };
