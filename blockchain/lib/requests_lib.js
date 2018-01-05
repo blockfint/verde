@@ -28,6 +28,7 @@ export default class {
           if(result.logs[i].event === 'LogRequest')
             return Promise.resolve(result.logs[i].args.requestID);
         }
+        return true;
       })
       .catch(console.log.bind(console))
   }

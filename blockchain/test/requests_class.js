@@ -26,7 +26,7 @@ contract('RequestsLib', function(accounts) {
 
     requestCount = await requestsLib.getRequestCount();
     console.log("requestCount:" + requestCount);
-    assert.equal(requestCount, 1, "Count");
+    assert.equal(requestCount, 0, "Count");
 
     // requestsLib.createRequest("0x1234","Release credit record", 1)
     // .then(function(rval) {
