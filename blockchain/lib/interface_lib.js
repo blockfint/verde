@@ -56,12 +56,16 @@ function watchRequestEvent(callback) {
   idpContract.watchRequestEvent(function(error, eventObject) {
     if(error) return callback(error);
     //filter only for those event concern IDP_ADDR
-    callback(null, eventObject)
+    callback(null, eventObject.args)
   });
 }
 
 function watchIDPResponseEvent(callback) {
-  //rpContract.IdpResponse(callback)
+  rpContract.watchIdpEvent(function(error, eventObject) {
+    if(error) return callback(error);
+    //filter only for those event concern RP_ADDR
+    callback(null, eventObject.args)
+  })
 }
 
 function watchAuthenticationEvent() {

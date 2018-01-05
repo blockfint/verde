@@ -51,7 +51,12 @@ export default class {
   *       console.error(error);
   */
   watchRequestEvent(callback) {
-    var event = this.registers.LogRequest()
+    var event = this.registers.LogRequest();
+    event.watch(callback);
+  }
+
+  watchIdpEvent(callback) {
+    var event = this.registers.IdpResponse();
     event.watch(callback);
   }
 

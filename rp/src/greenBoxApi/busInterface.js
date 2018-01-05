@@ -39,9 +39,9 @@ export const createIdpRequest = async (user, idps, hideSourceRpId = false) => {
   return requestId;
 };
 
-rpInterface.watchIDPResponseEvent(function(error, eventObject) {
+rpInterface.watchIDPResponseEvent(function(error, argsObject) {
   if(error) console.error('error:',error);
   //check whether approve or denied
-  //handleApprove(eventObject.requestId);
-  //handleDeny(eventObject.requestId);
+  if(argsObject.code === 'true') handleApprove(argsObject.requestID);
+  else handleDeny(argsObject.requestID);
 });

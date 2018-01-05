@@ -18,13 +18,14 @@ function updateRequestList(json) {
 window.addEventListener('load', () => {
   var userId = window.location.href.split('/');
   userId = userId[userId.length-1];
+  if(!userId) window.location = '/home/0x3355';
   fetch('/getPendingList/' + userId).then((response) => {
     return response.json();
   }).then((json) => {
     console.log(json);
     updateRequestList(json);
   }).catch(function(error) {
-    console.error(error,response);
+    console.error(error);
   });
 });
 

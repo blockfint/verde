@@ -46,7 +46,7 @@ contract Requests {
   function addIdpResponse(address requestID, string code, string message) 
     public {
     // requestID.addIdpResponse(code, message);
-    // IdpResponse(requestID, msg.sender, code, message);
+    IdpResponse(requestID, msg.sender, code, message);
   }
 
   event AuthenticationComplete(address requestID, string code, string message);
