@@ -7,7 +7,7 @@ var Requests = artifacts.require("./Requests.sol");
 contract('RequestsLib', function(accounts) {
   let requestsLib
 
-  before('set up auction registrar', (done) => {
+  before('set up requests', (done) => {
     Requests.deployed().then((instance) => {
       requestsLib = new RequestsLib(
           Requests,
@@ -21,12 +21,13 @@ contract('RequestsLib', function(accounts) {
   let requestCount
   it("should create a request", function() {
     requestCount = requestsLib.getRequestCount();
-    return requestsLib.createRequest("0x1234","Release credit record", 1
-    ).then(function(rval) {
-      console.log("rval " + rval);
+    return requestsLib.createRequest("0x1234","Release credit record", 1)
+    }).then(function(rval) {
+      // console.log("rval " + rval);
       return requestsLib.getRequestCount();
-    }).then(function(lastRequestCount) {
-      assert.equal(lastRequestCount, 1, "Count");
+    }).then(function(requestCount) {
+      console.log("requestCount:" + requestCount);
+      assert.equal(requestCount, 1, "Count");
     });
   });
 });

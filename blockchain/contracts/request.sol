@@ -11,7 +11,7 @@ contract Condition {
     minimumResponseOKCount = _minimumResponseOKCount;
   }
 
-  function isComplete(Response _response) public 
+  function isComplete(Response _response) public view
       returns (bool complete) {
     uint responseOKCount = 0;
     uint responseCount;
