@@ -23,9 +23,9 @@ contract Requests {
     address[] memory asServiceAddressList;
     string memory rpCondition;
     Request requestContract;
-    requestContract = new Request(_userAddress, rpCondition,
-                                          _requestText, idpAddressList,
-                                          asServiceAddressList);
+    requestContract = new Request(msg.sender, _userAddress, rpCondition,
+                                  _requestText, idpAddressList,
+                                  asServiceAddressList);
     requestIndex = requestContracts.push(requestContract) - 1;
     // Create request event.
     LogRequest(msg.sender, _userAddress, _requestText, _idpCount, 
@@ -43,14 +43,15 @@ contract Requests {
     return requestContracts[index];
   }
 
-  function addIdpResponse(address requestID, string code, string message) 
+  function addIdpResponse(Request request, uint code, string message) 
     public {
-    // requestID.addIdpResponse(code, message);
-    // IdpResponse(requestID, msg.sender, code, message);
+    // TODO: Check if the sender is the valid IDP.
+    request.addIdpResponse(msg.sender, code, message);
+    IdpResponse(request, msg.sender, code, message);
   }
 
   event AuthenticationComplete(address requestID, string code, string message);
   event AuthenticationFail(address requestID, string code, string message);
   event IdpResponse(address requestID, address idpAddress, 
-                    string code, string message);
+                    uint code, string message);
 }
