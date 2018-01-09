@@ -72,7 +72,7 @@ if (argv._.length === 0) {
 
 let command = argv._[0]
 
-if (command === 'create_request') {
+if (command === 'request') {
   console.log('CREATE ARGV' + JSON.stringify(argv))
   let { name, host, port, rp, ra } = argv
   let requests = initializeLib(host, port, ra, rp)
