@@ -4,7 +4,7 @@
   "description": "CLI for GreenBox",
   "scripts": {
     "compile": "truffle compile",
-    "request": "babel-node ./bin/request.js",
+    "didbus": "babel-node ./bin/didbus.js",
     "build": "./build.sh",
     "lint": "eslint ./"
   },

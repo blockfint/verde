@@ -9,7 +9,7 @@ const REQUEST_STRING = 'Pay for Blockfint ICO'
 const IDP_COUNT = 1
 
 var args = yargs
-  .command('create', 'Create a request', (yargs) => {
+  .command('request', 'Create a request', (yargs) => {
     return yargs.option('host', {
       description: 'HTTP host of Ethereum node',
       alias: 'h',
@@ -72,7 +72,7 @@ if (argv._.length === 0) {
 
 let command = argv._[0]
 
-if (command === 'create') {
+if (command === 'create_request') {
   console.log('CREATE ARGV' + JSON.stringify(argv))
   let { name, host, port, rp, ra } = argv
   let requests = initializeLib(host, port, ra, rp)
