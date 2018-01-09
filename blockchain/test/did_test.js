@@ -1,11 +1,11 @@
 /* global web3:true, assert:true, artifacts:true, contract:true */
 /* eslint-env mocha */
 
-import { default as Did } from '../lib/did'
+import { default as Did } from '../lib/did';
 var Requests = artifacts.require('./Requests.sol');
 
 contract('Did', function(accounts) {
-  let did
+  let did;
 
   before('set up requests', (done) => {
     Requests.deployed().then((instance) => {
@@ -14,9 +14,9 @@ contract('Did', function(accounts) {
           instance.address,
           web3.currentProvider,
           accounts[0]
-      )
-    }).then(() => done())
-  })
+      );
+    }).then(() => done());
+  });
 
   it('should create a request', async () => {
     let requestCount1 = await did.getRequestCount();

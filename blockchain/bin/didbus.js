@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-import { default as yargs } from 'yargs'
-import { default as initializeLib } from '../index'
+import { default as yargs } from 'yargs';
+import { default as initializeLib } from '../index';
 
-const RPC_HOST = 'localhost'
-const RPC_PORT = '8545'
-const USER_NAME = '0x3355'
-const REQUEST_STRING = 'Pay for Blockfint ICO'
-const IDP_COUNT = 1
+const RPC_HOST = 'localhost';
+const RPC_PORT = '8545';
+const USER_NAME = '0x3355';
+const REQUEST_STRING = 'Pay for Blockfint ICO';
+const IDP_COUNT = 1;
 
 var args = yargs
   .command('request', 'Create a request', (yargs) => {
@@ -34,7 +34,7 @@ var args = yargs
       default: USER_NAME,
       type: 'string'
     })
-    .demand(['ra', 'rp'])
+    .demand(['ra', 'rp']);
   })
   .command('response', 'Response to the request', (yargs) => {
     return yargs.option('host', {
@@ -59,36 +59,36 @@ var args = yargs
       description: 'The IDP account address to response to the request',
       type: 'string'
     })
-    .demand(['rid', 'ra', 'idp'])
+    .demand(['rid', 'ra', 'idp']);
   })
   .help()
-  .usage('Usage: $0 [command] [options]')
+  .usage('Usage: $0 [command] [options]');
 
-let { argv } = args
+let { argv } = args;
 
 if (argv._.length === 0) {
-  args.showHelp()
+  args.showHelp();
 }
 
-let command = argv._[0]
+let command = argv._[0];
 
 if (command === 'request') {
-  console.log('CREATE ARGV' + JSON.stringify(argv))
-  let { name, host, port, rp, ra } = argv
-  let requests = initializeLib(host, port, ra, rp)
+  console.log('CREATE ARGV' + JSON.stringify(argv));
+  let { name, host, port, rp, ra } = argv;
+  let requests = initializeLib(host, port, ra, rp);
   requests.createRequest(name, REQUEST_STRING, IDP_COUNT) 
-    .then(() => console.log('Created request for ' + name))
+    .then(() => console.log('Created request for ' + name));
   requests.watchRequestEvent(function(a,b) {
     console.log(a);
     console.log(b);
-  })
+  });
 }
 
 if (command === 'response') {
-  console.log('RESPONSE ARGV' + JSON.stringify(argv))
-  let { host, port, rid, idp, ra } = argv
-  let requests = initializeLib(host, port, ra, idp)
+  console.log('RESPONSE ARGV' + JSON.stringify(argv));
+  let { host, port, rid, idp, ra } = argv;
+  let requests = initializeLib(host, port, ra, idp);
   requests.addIdpResponse(rid, 0, 'Authentication success')
-    .then(() => console.log('Response success for request ID ' + rid))
+    .then(() => console.log('Response success for request ID ' + rid));
   requests.getPendingRequests(USER_NAME);
 }

@@ -1,17 +1,17 @@
-const Web3 = require('web3')
+const Web3 = require('web3');
 
 export default class {
   constructor (Requests, requestsAddress, provider, fromAddress) {
-    this.web3 = new Web3(provider)
-    this.fromAddress = fromAddress
-    this.provider = provider
+    this.web3 = new Web3(provider);
+    this.fromAddress = fromAddress;
+    this.provider = provider;
 
-    Requests.setProvider(provider)
+    Requests.setProvider(provider);
     Requests.defaults({
       from: fromAddress,
       gas: 900000 
-    })
-    this.requests = Requests.at(requestsAddress)
+    });
+    this.requests = Requests.at(requestsAddress);
   }
   /*
   * Create a request.
@@ -30,7 +30,7 @@ export default class {
         }
         return true;
       })
-      .catch(console.log.bind(console))
+      .catch(console.log.bind(console));
   }
 
   getRequestCount() {
