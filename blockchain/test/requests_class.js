@@ -2,7 +2,7 @@
 /* eslint-env mocha */
 
 import { default as RequestsLib } from '../lib/requests_lib'
-var Requests = artifacts.require("./Requests.sol");
+var Requests = artifacts.require('./Requests.sol');
 
 contract('RequestsLib', function(accounts) {
   let requestsLib
@@ -18,23 +18,17 @@ contract('RequestsLib', function(accounts) {
     }).then(() => done())
   })
 
-  it("should create a request", async () => {
-    let requestCount = await requestsLib.getRequestCount();
+  it('should create a request', async () => {
+    let requestCount1 = await requestsLib.getRequestCount();
 
-    const rval = await requestsLib.createRequest("0x1234","Release credit record", 1);
-    // console.log("rval " + rval);
+    const rval = await requestsLib.createRequest(
+      '0x1234','Release credit record', 1);
+    console.log('request ID ' + rval + ', type: ' + typeof(rval));
 
-    requestCount = await requestsLib.getRequestCount();
-    console.log("requestCount:" + requestCount);
-    assert.equal(requestCount, 0, "Count");
-
-    // requestsLib.createRequest("0x1234","Release credit record", 1)
-    // .then(function(rval) {
-    //   // console.log("rval " + rval);
-    //   return requestsLib.getRequestCount();
-    // }).then(function(requestCount) {
-    //   console.log("requestCount:" + requestCount);
-    //   assert.equal(requestCount, 1, "Count");
-    // });
+    let requestCount2 = await requestsLib.getRequestCount();
+    console.log('rcount1 ' + requestCount1 + ', type: ' + typeof(requestCount1));
+    console.log('rcount2 ' + requestCount2 + ', type: ' + typeof(requestCount2));
+    console.log('requestCount diff:' + parseInt(requestCount2 - requestCount1));
+    assert.equal(1, requestCount2 - requestCount1, 'Count');
   });
 });

@@ -9,7 +9,7 @@ export default class {
     Registers.setProvider(provider)
     Registers.defaults({
       from: fromAddress,
-      gas: 400000
+      gas: 900000 
     })
     this.registers = Registers.at(registersAddress)
   }
