@@ -1,17 +1,17 @@
 const Web3 = require('web3')
 
 export default class {
-  constructor (Registers, registersAddress, provider, fromAddress) {
+  constructor (Requests, requestsAddress, provider, fromAddress) {
     this.web3 = new Web3(provider)
     this.fromAddress = fromAddress
     this.provider = provider
 
-    Registers.setProvider(provider)
-    Registers.defaults({
+    Requests.setProvider(provider)
+    Requests.defaults({
       from: fromAddress,
       gas: 900000 
     })
-    this.registers = Registers.at(registersAddress)
+    this.requests = Requests.at(requestsAddress)
   }
   /*
   * Create a request.
@@ -22,7 +22,7 @@ export default class {
   *   requestID : string
   */
   createRequest(userName, requestText, idpCount) {
-    return this.registers.createRequest(
+    return this.requests.createRequest(
       userName, requestText, idpCount).then((result) => {
         for(var i in result.logs) {
           if(result.logs[i].event === 'LogRequest')
@@ -34,11 +34,11 @@ export default class {
   }
 
   getRequestCount() {
-    return this.registers.getRequestCount();
+    return this.requests.getRequestCount();
   }
 
   addIdpResponse(rid, code, status) {
-    return this.registers.addIdpResponse(rid, code, status);
+    return this.requests.addIdpResponse(rid, code, status);
   }
   /* 
   * Parameters
@@ -52,17 +52,17 @@ export default class {
   *       console.error(error);
   */
   watchRequestEvent(callback) {
-    var event = this.registers.LogRequest();
+    var event = this.requests.LogRequest();
     event.watch(callback);
   }
 
   watchIdpEvent(callback) {
-    var event = this.registers.IdpResponse();
+    var event = this.requests.IdpResponse();
     event.watch(callback);
   }
 
   getPendingRequests(userAddress, callback) {
-    this.registers.LogRequest({ userAddress: userAddress },{ fromBlock: 0 })
+    this.requests.LogRequest({ userAddress: userAddress },{ fromBlock: 0 })
     .get(function(error,logs) {
       //console.log('TEST getPendingRequests >>>>',logs);
       //process logs before pass it to callback
