@@ -65,11 +65,15 @@ function watchIDPResponseEvent(callback) {
     if(error) return callback(error);
     //filter only for those event concern RP_ADDR
     callback(null, eventObject.args)
-  })
+  });
 }
 
-function watchAuthenticationEvent() {
-  //rp.AuthenticationComplete(callback)
+function watchAuthenticationEvent(callback) {
+  rpContract.AuthenticationComplete(function(error, eventObject) {
+    if(error) return callback(error);
+    //filter only for those event concern RP_ADDR
+    callback(null, eventObject.args)
+  });
 }
 
 function getPendingRequests(userId,callback) {

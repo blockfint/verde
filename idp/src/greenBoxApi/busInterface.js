@@ -33,7 +33,8 @@ export async function getPendingList(userId) {
     idpInterface.getPendingRequests(userId,function(error, pendingList) {
       if(error) return reject(error);
       for(var i in pendingList) {
-        let { userAddress, requestID, rpAddress, requestText } = pendingList[i].args;
+        let { userAddress, requestID, rpAddress, requestText } = pendingList[i];
+        //rename key
         pendingList[i] = {
           userId: userAddress,
           requestId: requestID,

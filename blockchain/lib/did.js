@@ -61,13 +61,27 @@ export default class {
     event.watch(callback);
   }
 
+  watchAuthenticationEvent(callback) {
+    var event = this.requests.LogConditionComplete();
+    event.watch(callback);
+  }
+
   getPendingRequests(userAddress, callback) {
-    this.requests.LogRequest({ userAddress: userAddress },{ fromBlock: 0 })
-    .get(function(error,logs) {
-      //console.log('TEST getPendingRequests >>>>',logs);
-      //process logs before pass it to callback
-      //eg. check idp count, filter only unfinish, un-expire, ...
-      callback(error,logs);
-    });
+    try {
+      let count = this.requests.getRequestCount();
+      let pendingList = [];
+      for(let i = 0 ; i < count ; i++) {
+        let requestContract = this.requests.getRequest(i);
+        //check pending
+        pendingList.push({
+          requestID: requestContract,
+          userAddress: requestContract.userAddress,
+          rpAddress: requestContract.rpAddress,
+          requestText: requestContract.requestText
+        });
+      }
+      callback(null,pendingList);
+    }
+    catch(error) { callback(error) }
   }
 }

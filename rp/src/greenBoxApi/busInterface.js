@@ -9,13 +9,25 @@ export const event = new EventEmitter();
 // interface with bus/blockchain
 
 function handleApprove(requestId) {
-  event.emit('success', {
+  /*event.emit('success', {
+    requestId: requestId
+  });*/
+}
+
+function handleDeny(requestId) {
+  /*event.emit('error', {
+    requestId: requestId
+  });*/
+}
+
+function handleAuthenFail(requestId) {
+  event.emit('error', {
     requestId: requestId
   });
 }
 
-function handleDeny(requestId) {
-  event.emit('error', {
+function handleAuthenSuccess(requestId) {
+  event.emit('success', {
     requestId: requestId
   });
 }
@@ -42,6 +54,14 @@ export const createIdpRequest = async (user, idps, hideSourceRpId = false) => {
 rpInterface.watchIDPResponseEvent(function(error, argsObject) {
   if(error) console.error('error:',error);
   //check whether approve or denied
-  if(argsObject.code === 'true') handleApprove(argsObject.requestID);
-  else handleDeny(argsObject.requestID);
+  if(argsObject.code === 'true') handleApprove(argsObject);
+  else handleDeny(argsObject);
+});
+
+rpInterface.watchAuthenticationEvent(function(error, argsObject) {
+  if(error) console.error('error:',error);
+  //TODO check whether approve or denied
+  //if(argsObject.code === 'true') handleApprove(argsObject);
+  //else handleDeny(argsObject);
+  handleAuthenSuccess(argsObject.requestContract)
 });

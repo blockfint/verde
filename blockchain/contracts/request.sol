@@ -33,15 +33,16 @@ contract Condition {
 
 contract Request {
 
-  address userAddress;
+  address public userAddress;
+  address public rpAddress;
   string rpCondition;
-  string requestText;
+  string public requestText;
   bool authenticationComplete;
   address[] idpAddressList;    
   address[] asServiceAddressList;    
   Response idpResponse;
   // AsResponse[] asResponseList;
-  string requestStatus;
+  string public requestStatus;
   uint timeStamp;
   // This should be the address of condition contract during the request.
   // The reason is that user may change the condition contract later so we
@@ -57,6 +58,7 @@ contract Request {
     address[] _asServiceAddressList   
     ) public {
     userAddress = _userAddress;
+    rpAddress = _rpAddress;
     rpCondition = _rpCondition;
     requestText = _requestText;
     idpAddressList = _idpAddressList;
