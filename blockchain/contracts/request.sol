@@ -69,6 +69,8 @@ contract Request {
     // TODO: Put iniialization of condition in user contract.
     condition = new Condition(1);
     authenticationComplete = false;
+
+    idpResponse = new Response();
   }
 
   function addIdpResponse(address idp, uint code, string message) public {
