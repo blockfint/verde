@@ -69,7 +69,7 @@ function watchIDPResponseEvent(callback) {
 }
 
 function watchAuthenticationEvent(callback) {
-  rpContract.AuthenticationComplete(function(error, eventObject) {
+  rpContract.watchAuthenticationEvent(function(error, eventObject) {
     if(error) return callback(error);
     //filter only for those event concern RP_ADDR
     callback(null, eventObject.args)
