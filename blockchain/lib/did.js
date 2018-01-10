@@ -9,7 +9,7 @@ export default class {
     Requests.setProvider(provider);
     Requests.defaults({
       from: fromAddress,
-      gas: 900000 
+      gas: 2000000 
     });
     this.requests = Requests.at(requestsAddress);
   }
@@ -38,7 +38,11 @@ export default class {
   }
 
   addIdpResponse(rid, code, status) {
-    return this.requests.addIdpResponse(rid, code, status);
+    return this.requests.addIdpResponse(rid, code, status)
+      .then(() => {
+        return Promise.resolve(true)
+      })
+      .catch(console.log.bind(console));
   }
   /* 
   * Parameters
