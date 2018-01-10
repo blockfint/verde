@@ -1,7 +1,7 @@
 const Web3 = require('web3');
 
 export default class {
-  constructor (Requests, requestsAddress, provider, fromAddress) {
+  constructor (Requests, requestsAddress, provider, fromAddress, request = false, response = false) {
     this.web3 = new Web3(provider);
     this.fromAddress = fromAddress;
     this.provider = provider;
@@ -12,6 +12,20 @@ export default class {
       gas: 2000000 
     });
     this.requests = Requests.at(requestsAddress);
+
+    request.setProvider(provider);
+    request.defaults({
+      from: fromAddress,
+      gas: 2000000 
+    });
+    this.request = request;
+
+    response.setProvider(provider);
+    response.defaults({
+      from: fromAddress,
+      gas: 2000000 
+    });
+    this.response = response;
   }
   /*
   * Create a request.
@@ -66,26 +80,31 @@ export default class {
   }
 
   watchAuthenticationEvent(callback) {
-    var event = this.requests.LogConditionComplete();
-    event.watch(callback);
+    //LogConditionComplete is not in contract that we directly interact
+    //var event = this.requests.LogConditionComplete();
+    //event.watch(callback);
   }
 
-  getPendingRequests(userAddress, callback) {
+  async getPendingRequests(userAddress) {
     try {
-      let count = this.requests.getRequestCount();
+      let count = await this.requests.getRequestCount();
       let pendingList = [];
       for(let i = 0 ; i < count ; i++) {
-        let requestContract = this.requests.getRequest(i);
-        //check pending
+        let requestContract = await this.requests.getRequest(i);
+        //TODO check pending
+        let tmp = this.request.at(requestContract);
         pendingList.push({
           requestID: requestContract,
-          userAddress: requestContract.userAddress,
-          rpAddress: requestContract.rpAddress,
-          requestText: requestContract.requestText
+          userAddress: await tmp.userAddress(),
+          rpAddress: await tmp.rpAddress(),
+          requestText: await tmp.requestText()
         });
       }
-      callback(null,pendingList);
+      return [null,pendingList];
     }
-    catch(error) { callback(error) }
+    catch(error) { 
+      console.error('Cannot get pending',error);
+      return [error,null];
+    }
   }
 }

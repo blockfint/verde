@@ -29,22 +29,19 @@ export function listen(handleRequest) {
 
 export async function getPendingList(userId) {
 
-  return new Promise(function(resolve,reject) {
-    idpInterface.getPendingRequests(userId,function(error, pendingList) {
-      if(error) return reject(error);
-      for(var i in pendingList) {
-        let { userAddress, requestID, rpAddress, requestText } = pendingList[i];
-        //rename key
-        pendingList[i] = {
-          userId: userAddress,
-          requestId: requestID,
-          rpId: rpAddress,
-          data: requestText
-        }
-      }
-      resolve(pendingList);
-    });
-  });
+  let [error, pendingList] = await idpInterface.getPendingRequests(userId);
+  if(error) throw error;
+  for(var i in pendingList) {
+    let { userAddress, requestID, rpAddress, requestText } = pendingList[i];
+    //rename key
+    pendingList[i] = {
+      userId: userAddress,
+      requestId: requestID,
+      rpId: rpAddress,
+      data: requestText
+    }
+  }
+  return pendingList;
 
 }
 
