@@ -33,13 +33,13 @@ contract Condition {
 
 contract Request {
 
-  address userAddress;
-  string rpCondition;
-  string requestText;
-  bool authenticationComplete;
-  address[] idpAddressList;    
-  address[] asServiceAddressList;    
-  Response idpResponse;
+  address public userAddress;
+  string public rpCondition;
+  string public requestText;
+  bool public authenticationComplete;
+  address[] public idpAddressList;    
+  address[] public asServiceAddressList;    
+  Response public idpResponse;
   // AsResponse[] asResponseList;
   string requestStatus;
   uint timeStamp;
@@ -73,6 +73,10 @@ contract Request {
       authenticationComplete = true;
       LogConditionComplete(this, condition);
     }
+  }
+
+  function getIdpResponse() public view returns (Response res) {
+    return idpResponse;
   }
 
   event LogIdpResponse(address idpAddress, uint code, string message);

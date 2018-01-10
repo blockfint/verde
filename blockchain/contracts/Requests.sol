@@ -43,10 +43,9 @@ contract Requests {
     return requestContracts[index];
   }
 
-  function addIdpResponse(Request request, uint code, string message) 
-    public {
+  function addIdpResponse(Request request, uint code, string message) public {
     // TODO: Check if the sender is the valid IDP.
-    request.addIdpResponse(msg.sender, code, message);
+    // request.addIdpResponse(msg.sender, code, message);
     IdpResponse(request, msg.sender, code, message);
   }
 
