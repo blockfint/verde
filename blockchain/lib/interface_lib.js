@@ -37,7 +37,7 @@ function createRequest({ userId, requestText }) {
 }
 
 function addIdpResponse({ requestId, approve }) {
-  idpContract.addIdpResponse(requestId, approve.toString(), 'Mock up message');
+  idpContract.addIdpResponse(requestId, approve, 'Mock up message');
 }
 
 /* 
@@ -68,8 +68,8 @@ function watchIDPResponseEvent(callback) {
   });
 }
 
-function watchAuthenticationEvent(callback) {
-  rpContract.watchAuthenticationEvent(function(error, eventObject) {
+function watchAuthenticationEvent(requestId, callback) {
+  rpContract.watchAuthenticationEvent(requestId,function(error, eventObject) {
     if(error) return callback(error);
     //filter only for those event concern RP_ADDR
     callback(null, eventObject.args)

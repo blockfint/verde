@@ -2,14 +2,14 @@ import { idpInterface } from '../../../blockchain/build/lib/interface_lib';
 
 export function approve(data) {
   idpInterface.addIdpResponse({
-    approve: true,
+    approve: 0,
     ...data
   });
 }
 
 export function deny(data) {
   idpInterface.addIdpResponse({
-    approve: false,
+    approve: 1,
     ...data
   });
 }

@@ -9,21 +9,21 @@ export default class {
     Requests.setProvider(provider);
     Requests.defaults({
       from: fromAddress,
-      gas: 2000000 
+      gas: 6000000 
     });
     this.requests = Requests.at(requestsAddress);
 
     request.setProvider(provider);
     request.defaults({
       from: fromAddress,
-      gas: 2000000 
+      gas: 6000000 
     });
     this.request = request;
 
     response.setProvider(provider);
     response.defaults({
       from: fromAddress,
-      gas: 2000000 
+      gas: 6000000 
     });
     this.response = response;
   }
@@ -79,10 +79,9 @@ export default class {
     event.watch(callback);
   }
 
-  watchAuthenticationEvent(callback) {
-    //LogConditionComplete is not in contract that we directly interact
-    //var event = this.requests.LogConditionComplete();
-    //event.watch(callback);
+  watchAuthenticationEvent(requestId,callback) {
+    var event = this.request.at(requestId).LogConditionComplete();
+    event.watch(callback);
   }
 
   async getPendingRequests(userAddress) {
@@ -92,13 +91,17 @@ export default class {
       for(let i = 0 ; i < count ; i++) {
         let requestContract = await this.requests.getRequest(i);
         //TODO check pending
-        let tmp = this.request.at(requestContract);
-        pendingList.push({
-          requestID: requestContract,
-          userAddress: await tmp.userAddress(),
-          rpAddress: await tmp.rpAddress(),
-          requestText: await tmp.requestText()
-        });
+        let tmpRequest = this.request.at(requestContract);
+        let responseContract = await tmpRequest.getIdpResponse();
+        let tmpResponse = this.response.at(responseContract);
+        if(!(await tmpResponse.didIRespond())) {
+          pendingList.push({
+            requestID: requestContract,
+            userAddress: await tmpRequest.userAddress(),
+            rpAddress: await tmpRequest.rpAddress(),
+            requestText: await tmpRequest.requestText()
+          });
+        }
       }
       return [null,pendingList];
     }

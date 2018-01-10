@@ -5,6 +5,7 @@ contract Response {
     uint code;
     string message;
     uint index;
+    bool isAnswered;
   }
 
   mapping(address => ResponseStruct) private responseStructs;
@@ -15,7 +16,12 @@ contract Response {
     responseStructs[_responder].code = _code;
     responseStructs[_responder].message = _message;
     responseStructs[_responder].index = responses.push(_responder) - 1;
+    responseStructs[_responder].isAnswered = true;
     return responses.length - 1;
+  }
+
+  function didIRespond() public view returns (bool) {
+    return responseStructs[msg.sender].isAnswered;
   }
 
   function getResponseCount() public view returns(uint count) {

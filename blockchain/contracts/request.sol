@@ -13,6 +13,9 @@ contract Condition {
 
   function isComplete(Response _response) public view
       returns (bool complete) {
+    //==========
+    return true;
+    //==========
     uint responseOKCount = 0;
     uint responseCount;
     uint responseIndex;
@@ -69,7 +72,7 @@ contract Request {
   }
 
   function addIdpResponse(address idp, uint code, string message) public {
-    idpResponse.addResponse(idp, code, message);
+    //idpResponse.addResponse(idp, code, message);
     LogIdpResponse(idp, code, message); 
     if (condition.isComplete(idpResponse)) {
       authenticationComplete = true;

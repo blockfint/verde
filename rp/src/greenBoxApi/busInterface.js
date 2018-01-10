@@ -9,12 +9,14 @@ export const event = new EventEmitter();
 // interface with bus/blockchain
 
 function handleApprove(requestId) {
+  console.log('approve');
   /*event.emit('success', {
     requestId: requestId
   });*/
 }
 
 function handleDeny(requestId) {
+  console.log('deny');
   /*event.emit('error', {
     requestId: requestId
   });*/
@@ -47,6 +49,14 @@ export const createIdpRequest = async (user, idps, hideSourceRpId = false) => {
     rpId: hideSourceRpId ? null : RP_ID,
     // data: user,
   });*/
+
+  rpInterface.watchAuthenticationEvent(requestId,function(error, argsObject) {
+    if(error) console.error('error:',error);
+    //TODO check whether approve or denied
+    //if(argsObject.code === 'true') handleApprove(argsObject);
+    //else handleDeny(argsObject);
+    handleAuthenSuccess(argsObject.requestContract)
+  });
   
   return requestId;
 };
@@ -54,14 +64,6 @@ export const createIdpRequest = async (user, idps, hideSourceRpId = false) => {
 rpInterface.watchIDPResponseEvent(function(error, argsObject) {
   if(error) console.error('error:',error);
   //check whether approve or denied
-  if(argsObject.code === 'true') handleApprove(argsObject);
+  if(Number(argsObject.code) == 0) handleApprove(argsObject);
   else handleDeny(argsObject);
-});
-
-rpInterface.watchAuthenticationEvent(function(error, argsObject) {
-  if(error) console.error('error:',error);
-  //TODO check whether approve or denied
-  //if(argsObject.code === 'true') handleApprove(argsObject);
-  //else handleDeny(argsObject);
-  handleAuthenSuccess(argsObject.requestContract)
 });
