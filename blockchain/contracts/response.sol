@@ -10,14 +10,21 @@ contract Response {
 
   mapping(address => ResponseStruct) private responseStructs;
   address[] responses;
+  address private requestOwner;
+
+  function Response() public {
+    requestOwner = msg.sender;
+  }
 
   function addResponse(address _responder, uint _code, string _message) 
       public returns(uint index) {
-    responseStructs[_responder].code = _code;
-    responseStructs[_responder].message = _message;
-    responseStructs[_responder].index = responses.push(_responder) - 1;
-    responseStructs[_responder].isAnswered = true;
-    return responses.length - 1;
+    if(msg.sender == requestOwner) {
+      responseStructs[_responder].code = _code;
+      responseStructs[_responder].message = _message;
+      responseStructs[_responder].index = responses.push(_responder) - 1;
+      responseStructs[_responder].isAnswered = true;
+      return responses.length - 1;
+    }
   }
 
   function didIRespond() public view returns (bool) {
