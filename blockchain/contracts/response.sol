@@ -3,14 +3,14 @@ pragma solidity ^0.4.17;
 contract Response {
   struct ResponseStruct {
     uint code;
-    string message;
+    bytes32 message;
     uint index;
   }
 
   mapping(address => ResponseStruct) private responseStructs;
   address[] responses;
 
-  function addResponse(address _responder, uint _code, string _message) 
+  function addResponse(address _responder, uint _code, bytes32 _message) 
       public returns(uint index) {
     responseStructs[_responder].code = _code;
     responseStructs[_responder].message = _message;
@@ -23,7 +23,7 @@ contract Response {
   }
 
   function getResponseAtIndex(uint index) 
-      public view returns(uint code, string message) {
+      public view returns(uint code, bytes32 message) {
     return (responseStructs[responses[index]].code,
             responseStructs[responses[index]].message);
   }
@@ -34,7 +34,7 @@ contract Response {
   }
 
   function getResponse(address _responder) public view
-      returns(uint code, string message) {
+      returns(uint code, bytes32 message) {
     return (responseStructs[_responder].code,
             responseStructs[_responder].message);
   }

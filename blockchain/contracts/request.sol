@@ -32,7 +32,7 @@ contract Condition {
 }
 
 contract Request {
-
+  address public rpAddress;
   address public userAddress;
   string public rpCondition;
   string public requestText;
@@ -41,7 +41,7 @@ contract Request {
   address[] public asServiceAddressList;    
   Response public idpResponse;
   // AsResponse[] asResponseList;
-  string requestStatus;
+  string public requestStatus;
   uint timeStamp;
   // This should be the address of condition contract during the request.
   // The reason is that user may change the condition contract later so we
@@ -56,6 +56,7 @@ contract Request {
     address[] _idpAddressList,
     address[] _asServiceAddressList   
     ) public {
+    rpAddress = _rpAddress;
     userAddress = _userAddress;
     rpCondition = _rpCondition;
     requestText = _requestText;
@@ -64,9 +65,14 @@ contract Request {
     // TODO: Put iniialization of condition in user contract.
     condition = new Condition(1);
     authenticationComplete = false;
+    idpResponse = new Response();
   }
 
-  function addIdpResponse(address idp, uint code, string message) public {
+  function setRequestStatus(string _val) public {
+    requestStatus = _val;
+  }
+
+  function addIdpResponse(address idp, uint code, bytes32 message) public {
     idpResponse.addResponse(idp, code, message);
     LogIdpResponse(idp, code, message); 
     if (condition.isComplete(idpResponse)) {
@@ -79,7 +85,7 @@ contract Request {
     return idpResponse;
   }
 
-  event LogIdpResponse(address idpAddress, uint code, string message);
+  event LogIdpResponse(address idpAddress, uint code, bytes32 message);
   event LogConditionComplete(Request requestContract,
                              Condition conditionContract);
 }
