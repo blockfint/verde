@@ -48,6 +48,7 @@ contract Request {
   // should store this in the blockchain. 
   Condition condition;
 
+  // TODO: Add state so newRequest can be used only once.
   function newRequest(
     address _rpAddress,
     address _userAddress,

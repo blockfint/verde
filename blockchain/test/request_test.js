@@ -2,6 +2,7 @@
 /* eslint-env mocha */
 
 var Request = artifacts.require('./Request.sol');
+var Response = artifacts.require('./Response.sol');
 
 contract('Request', function(accounts) {
   let request;
@@ -34,14 +35,26 @@ contract('Request', function(accounts) {
     // use request object directly. The responder would be accounts[1].
   });
 
-  let res;
+  let response;
+  let idpMsg1 = 'OK: IDP1';
+  let idpMsg2 = 'ERROR';
+  let code;
+  let msg;
   it('should have idp response', async () => {
-    res = await request.addIdpResponse(accounts[1], 0, 'OK: IDP1');
-    console.log('res1: ' + JSON.stringify(res));
-    res = await request.getIdpResponse();
-    console.log('res2: ' + JSON.stringify(res));
-    let result = await request.authenticationComplete();
+    await request.addIdpResponse(accounts[1], 0, idpMsg1);
+    response = Response.at(await request.getIdpResponse());
+    console.log('response2: ' + response);
+    let result = await response.getResponseAtIndex(0);
+    console.log('code:'+result[0]+',msg:'+result[1]);
+    assert.equal(0, result[0], 'code');
+    msg = web3.toAscii(result[1]).replace(/\u0000/g, '');
+    // var str2 = web3.fromAscii(idpMsg1, 32);
+    assert.equal(idpMsg1, msg, 'message');
+    result = await request.authenticationComplete();
     assert.equal(true, result, 'authen should complete.')
+
+    await request.addIdpResponse(accounts[1], 1, idpMsg2);
+    assert.equal(1, await response.getResponseCodeAtIndex(1), 'response code');
   });
 
 });
