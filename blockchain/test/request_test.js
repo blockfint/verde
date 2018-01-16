@@ -7,21 +7,15 @@ contract('Request', function(accounts) {
   let request;
 
   before('set up request', (done) => {
-    Request.new(accounts[0], accounts[2], '', 'Request123').then((instance) => {
+    Request.new(accounts[0], accounts[2], 'rp condition', 'Request123').then((instance) => {
       request = instance;
-    }).then(() => done());
-  });
-
-  it('should have idp response', async () => {
-    // res = await request.addIdpResponse(accounts[1], 0, 'OK: IDP1');
-    // console.log('res1: ' + JSON.stringify(res));
-    res = await request.getIdpResponse();
-    console.log('res2: ' + JSON.stringify(res));
-    let result = await request.authenticationComplete();
-    assert.equal(true, result, 'authen should complete.')
+      console.log('request instance:' + JSON.stringify(request));
+      done();
+    });
   });
 
   it('should have all getters with correct value', async () => {
+    console.log('request instance 2:' + request);
     console.log('rp address', await request.rpAddress());
     console.log('user address', await request.userAddress());
     // assert.equal(await request.requestText(), 'Request123', 'requestText()')
@@ -35,4 +29,16 @@ contract('Request', function(accounts) {
 
     // use request object directly. The responder would be accounts[1].
   });
+
+  let res;
+  it('should have idp response', async () => {
+    await request.newRequest(accounts[0], accounts[2], 'rp condition', 'Request123', [], []);
+    res = await request.addIdpResponse(accounts[1], 0, 'OK: IDP1');
+    console.log('res1: ' + JSON.stringify(res));
+    res = await request.getIdpResponse();
+    console.log('res2: ' + JSON.stringify(res));
+    let result = await request.authenticationComplete();
+    assert.equal(true, result, 'authen should complete.')
+  });
+
 });

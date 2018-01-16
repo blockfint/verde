@@ -48,7 +48,7 @@ contract Request {
   // should store this in the blockchain. 
   Condition condition;
 
-  function Request(
+  function newRequest(
     address _rpAddress,
     address _userAddress,
     string _rpCondition,
@@ -67,6 +67,7 @@ contract Request {
     authenticationComplete = false;
     idpResponse = new Response();
   }
+
 
   function setRequestStatus(string _val) public {
     requestStatus = _val;
