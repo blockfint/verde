@@ -5,7 +5,7 @@ import './response.sol';
 // Simple Condition contract that the function isComplete is true when minimum
 // response OK count is met. This is pretty much and condition only.
 contract Condition {
-  uint minimumResponseOKCount;
+  uint minimumResponseOKCount = 1;
 
   function Condition(uint _minimumResponseOKCount) public {
     minimumResponseOKCount = _minimumResponseOKCount;

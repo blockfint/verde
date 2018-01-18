@@ -25,7 +25,7 @@ contract('Request', function(accounts) {
   it('should have all getters with correct value', async () => {
     user = await User.new();
     user.newUser(ownerAddress, 'ssn', '130');
-    let condition = await Condition.new();
+    let condition = await Condition.new(1);
     await user.setConditionContractAddress(condition.address);
     console.log('user condition contract address:' + 
                 await user.conditionContract());
@@ -68,4 +68,30 @@ contract('Request', function(accounts) {
     assert.equal(1, await response.getResponseCodeAtIndex(1), 'response code');
   });
 
+  let req;
+  it('should not complete when idp response not ok', async () => {
+    req = await Request.new();
+    await req.newRequest(rpAddress, user.address, rpCondition, requestText, 
+                         [], []);
+    console.log('req 3:' + req); 
+    await req.addIdpResponse(accounts[1], 1, idpMsg1);
+    assert.equal(false, await req.authenticationComplete(), 
+                 'should not complete yet.');
+  });
+
+  it('should complete when two ok and one not', async () => {
+    req = await Request.new();
+    let condition = await Condition.new(2);
+    await user.setConditionContractAddress(condition.address);
+    await req.newRequest(rpAddress, user.address, rpCondition, requestText, 
+                         [], []);
+    console.log('req 4:' + req);
+    await req.addIdpResponse(accounts[1], 1, idpMsg1);
+    await req.addIdpResponse(accounts[2], 0, idpMsg1);
+    assert.equal(false, await req.authenticationComplete(), 
+                 'should not complete yet.');
+    await req.addIdpResponse(accounts[3], 0, idpMsg1);
+    assert.equal(true, await req.authenticationComplete(), 
+                 'should complete.');
+  });
 });
