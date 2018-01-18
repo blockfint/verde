@@ -1,39 +1,12 @@
 pragma solidity ^0.4.17;
 
-import './response.sol';
-
-// Simple Condition contract that the function isComplete is true when minimum
-// response OK count is met. This is pretty much and condition only.
-contract Condition {
-  uint minimumResponseOKCount;
-
-  function Condition(uint _minimumResponseOKCount) public {
-    minimumResponseOKCount = _minimumResponseOKCount;
-  }
-
-  function isComplete(Response _response) public view
-      returns (bool complete) {
-    uint responseOKCount = 0;
-    uint responseCount;
-    uint responseIndex;
-    uint responseCode;
-    responseCount = _response.getResponseCount();
-    for (responseIndex = 0; responseIndex < responseCount; responseIndex++) {
-      responseCode = _response.getResponseCodeAtIndex(responseIndex);
-      if (responseCode == 0) {
-        responseOKCount++;
-        if (responseOKCount >= minimumResponseOKCount) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-}
+import './icondition.sol';
+import './user.sol';
 
 contract Request {
   address public rpAddress;
   address public userAddress;
+  User user;
   string public rpCondition;
   string public requestText;
   bool public authenticationComplete;
@@ -43,10 +16,11 @@ contract Request {
   // AsResponse[] asResponseList;
   string public requestStatus;
   uint timeStamp;
-  // This should be the address of condition contract during the request.
-  // The reason is that user may change the condition contract later so we
-  // should store this in the blockchain. 
-  Condition condition;
+  // This address of the condition contract used during the request.
+  // User may change the condition contract for each request so we
+  // should store this in the blockchain to record the condition contract used
+  // for each request. 
+  ICondition condition;
 
   // TODO: Add state so newRequest can be used only once.
   function newRequest(
@@ -63,12 +37,12 @@ contract Request {
     requestText = _requestText;
     idpAddressList = _idpAddressList;
     asServiceAddressList = _asServiceAddressList;
-    // TODO: Put iniialization of condition in user contract.
-    condition = new Condition(1);
+    user = User(userAddress);
+    condition = user.conditionContract();
+    require(address(condition) != address(0));
     authenticationComplete = false;
     idpResponse = new Response();
   }
-
 
   function setRequestStatus(string _val) public {
     requestStatus = _val;
@@ -89,7 +63,7 @@ contract Request {
 
   event LogIdpResponse(address idpAddress, uint code, bytes32 message);
   event LogConditionComplete(Request requestContract,
-                             Condition conditionContract);
+                             ICondition conditionContract);
 }
 
 /*

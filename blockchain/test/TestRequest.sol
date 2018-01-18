@@ -4,17 +4,34 @@ import "truffle/Assert.sol";
 import "truffle/DeployedAddresses.sol";
 import "../contracts/request.sol";
 import "../contracts/response.sol";
+import "../contracts/user.sol";
+import "../contracts/condition.sol";
 
 contract TestRequest {
 
   // address constant public rpAddress = 0xE0f5206BBD039e7b0592d8918820024e2a7437b9;
-  address public rpAddress = 0xA34;
-  address public userAddress = 0x567;
-  address public idpAddress1 = 0x789;
-  address public idpAddress2 = 0x78A;
-  address public idpAddress3 = 0x78B;
+  address rpAddress = 0xA34;
+  address ownerAddress = 0x567;
+  address idpAddress1 = 0x789;
+  address idpAddress2 = 0x78A;
+  address idpAddress3 = 0x78B;
   bytes32 idpMsg1 = "IDP1";
   bytes32 idpMsg2 = "IDP2";
+  User user;
+  address userAddress;
+  Condition condition;
+
+  function beforeAll1() public {
+    user = new User();
+    user.newUser(ownerAddress, 'ssn', '145');
+    userAddress = user;
+  }
+
+  function beforeAll2() public {
+    condition = new Condition(1);
+    user.setConditionContractAddress(condition);
+    Debug1("con set");
+  }
 
   function testNewRequest() public {
     address[] memory empty;
@@ -69,4 +86,6 @@ contract TestRequest {
     Assert.equal(idpMsg2 , resMsg, "res msg");
     Assert.equal(true, req.authenticationComplete(), "authen complete");
   } 
+
+  event Debug1(string msg);
 }

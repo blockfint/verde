@@ -3,6 +3,8 @@
 
 var Request = artifacts.require('./Request.sol');
 var Response = artifacts.require('./Response.sol');
+var User = artifacts.require('./User.sol');
+var Condition = artifacts.require('./Condition.sol');
 
 contract('Request', function(accounts) {
   let request;
@@ -16,12 +18,20 @@ contract('Request', function(accounts) {
   });
 
   let rpAddress = accounts[0];
-  let userAddress = accounts[2];
+  let ownerAddress = accounts[2];
+  let user;
   let requestText = 'Request 123';
   let rpCondition = 'RP Condition';
   it('should have all getters with correct value', async () => {
-    await request.newRequest(rpAddress, userAddress, rpCondition, requestText, 
+    user = await User.new();
+    user.newUser(ownerAddress, 'ssn', '130');
+    let condition = await Condition.new();
+    await user.setConditionContractAddress(condition.address);
+    console.log('user condition contract address:' + 
+                await user.conditionContract());
+    await request.newRequest(rpAddress, user.address, rpCondition, requestText, 
                              [], []);
+    let userAddress = user.address;
     console.log('request instance 2:' + request);
     console.log('rp address', await request.rpAddress());
     console.log('user address', await request.userAddress());
@@ -41,6 +51,7 @@ contract('Request', function(accounts) {
   let code;
   let msg;
   it('should have idp response', async () => {
+    console.log('req: ' + request);
     await request.addIdpResponse(accounts[1], 0, idpMsg1);
     response = Response.at(await request.getIdpResponse());
     console.log('response2: ' + response);
