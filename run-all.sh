@@ -17,6 +17,7 @@ RP_ADDR=${tmpArr[1]}
 
 cd $(dirname "${BASH_SOURCE[0]}")/blockchain
 truffle migrate > /dev/null
+npm run build
 
 tmpArr=($(cat $tmpFile | tail -n20 | grep "Contract"))
 CONTRACT_ADDR=${tmpArr[2]}
