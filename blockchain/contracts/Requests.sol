@@ -23,9 +23,10 @@ contract Requests {
     address[] memory asServiceAddressList;
     string memory rpCondition;
     Request requestContract;
-    requestContract = new Request(msg.sender, _userAddress, rpCondition,
-                                  _requestText, idpAddressList,
-                                  asServiceAddressList);
+    requestContract = new Request();
+    requestContract.newRequest(msg.sender, _userAddress, rpCondition,
+                               _requestText, idpAddressList,
+                               asServiceAddressList);
     requestIndex = requestContracts.push(requestContract) - 1;
     // Create request event.
     LogRequest(msg.sender, _userAddress, _requestText, _idpCount, 

@@ -2,8 +2,8 @@
 /* eslint-env mocha */
 
 import { default as Did } from '../lib/did';
-var Requests = artifacts.require('./Requests.sol');
-var Request = artifacts.require('./Request.sol');
+var Requests = artifacts.require('Requests');
+var Request = artifacts.require('Request');
 
 contract('DID', function(accounts) {
   let did;
