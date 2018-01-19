@@ -1,10 +1,10 @@
 /* global web3:true, assert:true, artifacts:true, contract:true */
 /* eslint-env mocha */
 
-var Request = artifacts.require('./Request.sol');
-var Response = artifacts.require('./Response.sol');
-var User = artifacts.require('./User.sol');
-var Condition = artifacts.require('./Condition.sol');
+var Request = artifacts.require('Request');
+var Response = artifacts.require('Response');
+var User = artifacts.require('User');
+var Condition = artifacts.require('Condition');
 
 contract('Request', function(accounts) {
   let request;

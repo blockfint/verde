@@ -1,4 +1,4 @@
-var Requests = artifacts.require('./Requests.sol');
+var Requests = artifacts.require('Requests');
 
 contract('Requests', function(accounts) {
   let requests;
