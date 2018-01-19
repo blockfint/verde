@@ -31,16 +31,15 @@ contract Request {
     address[] _idpAddressList,
     address[] _asServiceAddressList   
     ) public {
-    rpAddress = _rpAddress;
     userAddress = _userAddress;
     rpAddress = _rpAddress;
     rpCondition = _rpCondition;
     requestText = _requestText;
     idpAddressList = _idpAddressList;
     asServiceAddressList = _asServiceAddressList;
-    user = User(userAddress);
+    /*user = new User(userAddress);
     condition = user.conditionContract();
-    require(address(condition) != address(0));
+    require(address(condition) != address(0));*/
     authenticationComplete = false;
     idpResponse = new Response();
   }
@@ -52,10 +51,10 @@ contract Request {
   function addIdpResponse(address idp, uint code, bytes32 message) public {
     idpResponse.addResponse(idp, code, message);
     LogIdpResponse(idp, code, message); 
-    if (condition.isComplete(idpResponse)) {
+    /*if (condition.isComplete(idpResponse)) {
       authenticationComplete = true;
       LogConditionComplete(this, condition);
-    }
+    }*/
   }
 
   function getIdpResponse() public view returns (Response res) {

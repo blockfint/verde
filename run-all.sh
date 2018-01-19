@@ -16,11 +16,9 @@ tmpArr=($(cat $tmpFile | sed '6q;d'))
 RP_ADDR=${tmpArr[1]}
 
 cd $(dirname "${BASH_SOURCE[0]}")/blockchain
-truffle migrate > /dev/null
+MIGRATE=($(truffle migrate | grep "Requests:"))
+CONTRACT_ADDR=${MIGRATE[1]}
 npm run build
-
-tmpArr=($(cat $tmpFile | tail -n20 | grep "Contract"))
-CONTRACT_ADDR=${tmpArr[2]}
 
 cd ../idp/
 IDP_ADDR=$IDP_ADDR CONTRACT_ADDR=$CONTRACT_ADDR bash -c 'npm start > /tmp/idp.log &'

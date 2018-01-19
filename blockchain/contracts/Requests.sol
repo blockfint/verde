@@ -44,7 +44,7 @@ contract Requests {
     return requestContracts[index];
   }
 
-  function addIdpResponse(address requestID, uint code, string message) public {
+  function addIdpResponse(address requestID, uint code, bytes32 message) public {
     // TODO: Check if the sender is the valid IDP.
     Request requestContract = Request(requestID);
     requestContract.addIdpResponse(msg.sender, code, message);
@@ -54,5 +54,5 @@ contract Requests {
   event AuthenticationComplete(address requestID, string code, string message);
   event AuthenticationFail(address requestID, string code, string message);
   event IdpResponse(address requestID, address idpAddress, 
-                    uint code, string message);
+                    uint code, bytes32 message);
 }
