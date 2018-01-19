@@ -1,7 +1,6 @@
 pragma solidity ^0.4.17;
 
 contract UserDirectory {
-
 	mapping (string => address) private _users;
 	uint public userCount;
 
