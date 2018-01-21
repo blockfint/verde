@@ -22,7 +22,6 @@ contract('Requests', function(accounts) {
       let user = await User.new();
       let ownerAddress = accounts[2];
       user.newUser(ownerAddress, 'ssn', '130');
-      // let condition = await Condition.new(1);
       await user.setConditionContractAddress(condition.address);
       let requestCount1 = await requests.getRequestCount();
       console.log('rcount1 ' + requestCount1);

@@ -4,6 +4,8 @@
 import { default as Did } from '../lib/did';
 var Requests = artifacts.require('Requests');
 var Request = artifacts.require('Request');
+var Condition = artifacts.require('Condition');
+var User = artifacts.require('User');
 
 contract('DID', function(accounts) {
   let did;
@@ -19,13 +21,38 @@ contract('DID', function(accounts) {
     }).then(() => done());
   });
 
+  let condition;
+  before('set up condition', (done) => {
+    Condition.deployed(1).then((instance) => {
+      condition = instance;
+    }).then(() => done());
+  });
+
+  /*
+  let user;
+  before('set up user', (done) => {
+    User.deployed().then((instance) => {
+      user = instance;
+      console.log('user instance:' + user);
+      let condition = Condition.new(1);
+      await user.newUser(accounts[2], 'ssn', '130');
+      await user.setConditionContractAddress(condition.address);
+      done();
+    });
+  });
+  */
+
   let request;
   let requestContractInstance;
   it('should create a request', async () => {
+    let user = await User.new();
+    let ownerAddress = accounts[2];
+    user.newUser(ownerAddress, 'ssn', '130');
+    await user.setConditionContractAddress(condition.address);
     let requestCount1 = await did.getRequestCount();
-    let rtext = 'Release credit record';
+    var rtext = 'Release credit record';
 
-    request = await did.createRequest('0x1234', rtext, 1);
+    request = await did.createRequest(user.address, rtext, 1);
     console.log('request ID ' + request + ', type: ' + typeof(request));
 
     let requestCount2 = await did.getRequestCount();

@@ -9,21 +9,21 @@ export default class {
     Requests.setProvider(provider);
     Requests.defaults({
       from: fromAddress,
-      gas: 2000000 
+      gas: 3000000 
     });
     this.requests = Requests.at(requestsAddress);
   }
   /*
   * Create a request.
   * Parameters
-  *   userName : string
+  *   userAddress : string
   *   requestText : string
   * Returns
   *   requestID : string
   */
-  createRequest(userName, requestText, idpCount) {
+  createRequest(userAddress, requestText, idpCount) {
     return this.requests.createRequest(
-      userName, requestText, idpCount).then((result) => {
+      userAddress, requestText, idpCount).then((result) => {
         for(var i in result.logs) {
           if(result.logs[i].event === 'LogRequest')
             return Promise.resolve(result.logs[i].args.requestID);
