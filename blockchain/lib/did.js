@@ -59,6 +59,21 @@ export default class {
   *   userContractAddress : string
   */
   createUser(ownerAddress, namespace, id) {
+    return this.userDirectory.findUserByNamespaceAndId(namespace, id)
+      .then((result) => {
+        if(web3.toDecimal(result) == 0) {
+          return this.newUser(ownerAddress, namespace, id)
+            .then((result) => {
+              return Promise.resolve(result);
+            })  ;
+        } else {
+          return Promise.resolve(result);
+        }
+    })
+    .catch(console.log.bind(console));
+  }
+
+  newUser(ownerAddress, namespace, id) {
     return this.userDirectory.newUser(
       ownerAddress, namespace, id).then((result) => {
          for(var i in result.logs) {
@@ -71,7 +86,11 @@ export default class {
   }
 
   getUserCount() {
-    return this.userDirectory.userCount();
+    return this.userDirectory.userCount()
+      .then((result) => {
+        return Promise.resolve(result);
+      })
+      .catch(console.log.bind(console));
   }
 
   addIdpResponse(rid, code, status) {
@@ -93,7 +112,7 @@ export default class {
   *       console.error(error);
   */
   watchRequestEvent(callback) {
-    var event = this.requests.LogRequest();
+    var event = this.requests0.LogRequest();
     event.watch(callback);
   }
 

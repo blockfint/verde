@@ -1,6 +1,7 @@
 pragma solidity ^0.4.17;
 
 import './User.sol';
+import './Condition.sol';
 
 contract UserDirectory {
 
@@ -25,7 +26,9 @@ contract UserDirectory {
     public
   {
     User user = new User();
+    Condition condition = new Condition(1);
     user.newUser(_owner, _namespace, _id);
+    user.setConditionContractAddress(condition);
     _users[_namespace].users[_id] = user;
     userCount++;
     // Create new user event.
