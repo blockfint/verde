@@ -1,4 +1,5 @@
 const Web3 = require('web3');
+var UserDirectory = artifacts.require('UserDirectory');
 
 export default class {
   constructor (Requests, requestsAddress, provider, fromAddress) {
@@ -12,6 +13,17 @@ export default class {
       gas: 3000000 
     });
     this.requests = Requests.at(requestsAddress);
+
+    // Deploy User Directory
+    UserDirectory.setProvider(this.provider);
+    UserDirectory.defaults({
+      from: this.fromAddress,
+      gas: 3000000 
+    });
+
+    UserDirectory.deployed().then((instance) => {
+      this.userDirectory = instance;
+    });
   }
   /*
   * Create a request.
@@ -35,6 +47,31 @@ export default class {
 
   getRequestCount() {
     return this.requests.getRequestCount();
+  }
+
+  /*
+  * Create a user.
+  * Parameters
+  *   ownerAddress : string
+  *   namespace    : string
+  *   namespace    : string
+  * Returns
+  *   userContractAddress : string
+  */
+  createUser(ownerAddress, namespace, id) {
+    return this.userDirectory.newUser(
+      ownerAddress, namespace, id).then((result) => {
+         for(var i in result.logs) {
+          if(result.logs[i].event === 'LogNewUser')
+            return Promise.resolve(result.logs[i].args.userContract);
+        }
+        return true;
+      })
+      .catch(console.log.bind(console));
+  }
+
+  getUserCount() {
+    return this.userDirectory.userCount();
   }
 
   addIdpResponse(rid, code, status) {

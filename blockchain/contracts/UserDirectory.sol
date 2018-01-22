@@ -11,6 +11,8 @@ contract UserDirectory {
   mapping (string => Users) private _users;
   uint public userCount;
 
+  event LogNewUser(string namespace, string id, address userContract);
+
   function UserDirectory() public {
     userCount = 0;
   }
@@ -26,6 +28,8 @@ contract UserDirectory {
     user.newUser(_owner, _namespace, _id);
     _users[_namespace].users[_id] = user;
     userCount++;
+    // Create new user event.
+    LogNewUser(_namespace, _id, user); 
   }
 
   function findUserByNamespaceAndId(

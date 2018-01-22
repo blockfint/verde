@@ -6,22 +6,6 @@ var User = artifacts.require('User');
 
 contract('UserDirectory', function(accounts) {
   let userDirectory;
-  // let user1;
-  // let user2;
-
-  // before('set up user1', (done) => {
-  //   User.new().then((instance) => {
-  //     user1 = instance;
-  //     done();
-  //   });
-  // });
-
-  // before('set up user2', (done) => {
-  //   User.new().then((instance) => {
-  //     user2 = instance;
-  //     done();
-  //   });
-  // });
 
   before('set up user directory', (done) => {
     UserDirectory.new().then((instance) => {

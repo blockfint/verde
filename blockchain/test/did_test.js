@@ -45,6 +45,15 @@ contract('DID', function(accounts) {
   let request;
   let requestContractInstance;
   it('should create a request', async () => {
+
+    console.log("getUserCount: " + await did.getUserCount())
+
+    console.log(await did.createUser(accounts[2], 'ssn', '130'));
+    console.log("getUserCount: " + await did.getUserCount())
+
+    console.log(await did.createUser(accounts[2], 'ssn', '130'));
+    console.log("getUserCount: " + await did.getUserCount())
+
     let user = await User.new();
     let ownerAddress = accounts[2];
     user.newUser(ownerAddress, 'ssn', '130');
