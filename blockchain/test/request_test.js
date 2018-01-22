@@ -62,7 +62,7 @@ contract('Request', function(accounts) {
     // var str2 = web3.fromAscii(idpMsg1, 32);
     assert.equal(idpMsg1, msg, 'message');
     result = await request.authenticationComplete();
-    assert.equal(true, result, 'authen should complete.')
+    assert.equal(true, result, 'authen should complete.');
 
     await request.addIdpResponse(accounts[1], 1, idpMsg2);
     assert.equal(1, await response.getResponseCodeAtIndex(1), 'response code');

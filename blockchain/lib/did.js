@@ -77,7 +77,7 @@ export default class {
   addIdpResponse(rid, code, status) {
     return this.requests.addIdpResponse(rid, code, status)
       .then(() => {
-        return Promise.resolve(true)
+        return Promise.resolve(true);
       })
       .catch(console.log.bind(console));
   }
