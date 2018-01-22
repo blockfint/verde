@@ -69,7 +69,7 @@ contract('DID', function(accounts) {
 
   it('should response to the request', async () => {
     // use did 
-    console.log("About to add IDP Response");
+    console.log('About to add IDP Response');
     // Here we get an error because request is a string but the smart contract
     // treat is as object
     // await did.addIdpResponse(request, 0, 'OK');

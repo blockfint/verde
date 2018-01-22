@@ -16,9 +16,9 @@ contract('User', function(accounts) {
     });
   });
 
-  let id = "1111";
-  let namespace = "nnn";
-  let owner = "0x79c6d3bc369594398be7cbcb11e18605a3ec77b4";
+  let id = '1111';
+  let namespace = 'nnn';
+  let owner = '0x79c6d3bc369594398be7cbcb11e18605a3ec77b4';
   it('should have all getters with correct value', async () => {
     await user.newUser(owner, namespace, id);
     condition = await Condition.new();
