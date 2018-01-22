@@ -6,22 +6,22 @@ var User = artifacts.require('User');
 
 contract('UserDirectory', function(accounts) {
   let userDirectory;
-  let user1;
-  let user2;
+  // let user1;
+  // let user2;
 
-  before('set up user1', (done) => {
-    User.new().then((instance) => {
-      user1 = instance;
-      done();
-    });
-  });
+  // before('set up user1', (done) => {
+  //   User.new().then((instance) => {
+  //     user1 = instance;
+  //     done();
+  //   });
+  // });
 
-  before('set up user2', (done) => {
-    User.new().then((instance) => {
-      user2 = instance;
-      done();
-    });
-  });
+  // before('set up user2', (done) => {
+  //   User.new().then((instance) => {
+  //     user2 = instance;
+  //     done();
+  //   });
+  // });
 
   before('set up user directory', (done) => {
     UserDirectory.new().then((instance) => {
@@ -35,27 +35,20 @@ contract('UserDirectory', function(accounts) {
   let user1_owner = accounts[0];
 
   let user2_id = '2222';
-  let user2_namespace = 'bbbb';
+  let user2_namespace = 'aaaa';
   let user2_owner = accounts[1];
 
   it('should have all getters with correct value', async () => {
     // create new user1
-    await user1.newUser(user1_owner, user1_namespace, user1_id);
-    await userDirectory.newUser(user1_id, user1.address);
+    await userDirectory.newUser(user1_owner, user1_namespace, user1_id);
+    var user1_ContractAddr = await userDirectory.findUserByNamespaceAndId(user1_namespace,user1_id);
 
     // create new user2
-    await user2.newUser(user2_owner, user2_namespace, user2_id);
-    await userDirectory.newUser(user2_id, user2.address);
+    await userDirectory.newUser(user2_owner, user2_namespace, user2_id);
+    var user2_ContractAddr = await userDirectory.findUserByNamespaceAndId(user2_namespace, user2_id);
 
-    // get Contract address from UserDirectory
-    var user1_ContractAddr = await userDirectory.findUserByID(user1_id);
-    assert.equal(user1_ContractAddr, user1.address, 'User 1 contract address will be the same.');
-
-    var user2_ContractAddr = await userDirectory.findUserByID(user2_id);
-    assert.equal(user2_ContractAddr, user2.address, 'User 2 contract address will be the same.');
-
-    // test wrong User ID
-    var wrong_ContractAddr = await userDirectory.findUserByID('3333');
+    // test wrong user ID
+    var wrong_ContractAddr = await userDirectory.findUserByNamespaceAndId('aaaa', '3333');
     assert.equal(web3.toDecimal(wrong_ContractAddr), 0, 'Should be get 0.');
 
     // Should have correct value
