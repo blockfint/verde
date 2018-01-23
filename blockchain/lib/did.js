@@ -19,7 +19,7 @@ export default class {
       request.setProvider(provider);
       request.defaults({
         from: fromAddress,
-        gas: 6000000 
+        gas: 3000000 
       });
       this.request = request;
     }
@@ -28,7 +28,7 @@ export default class {
       response.setProvider(provider);
       response.defaults({
         from: fromAddress,
-        gas: 6000000 
+        gas: 3000000 
       });
       this.response = response;
     }
@@ -130,7 +130,7 @@ export default class {
   *       console.error(error);
   */
   watchRequestEvent(callback) {
-    var event = this.requests0.LogRequest();
+    var event = this.requests.LogRequest();
     event.watch(callback);
   }
 

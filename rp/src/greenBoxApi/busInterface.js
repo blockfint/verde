@@ -43,6 +43,10 @@ export const createIdpRequest = async (user, idps, hideSourceRpId = false) => {
     requestText: 'Mockup request details'
   }); 
 
+  if(!requestId) {
+    console.error("Cannot create request");
+    return;
+  }
   /*ipc.of.bus.emit('createRequest',{
     userId: user.id,
     requestId: requestId,
