@@ -15,19 +15,23 @@ export default class {
     });
     this.requests = Requests.at(requestsAddress);
 
-    request.setProvider(provider);
-    request.defaults({
-      from: fromAddress,
-      gas: 6000000 
-    });
-    this.request = request;
+    if(request) {
+      request.setProvider(provider);
+      request.defaults({
+        from: fromAddress,
+        gas: 6000000 
+      });
+      this.request = request;
+    }
 
-    response.setProvider(provider);
-    response.defaults({
-      from: fromAddress,
-      gas: 6000000 
-    });
-    this.response = response;
+    if(response) {
+      response.setProvider(provider);
+      response.defaults({
+        from: fromAddress,
+        gas: 6000000 
+      });
+      this.response = response;
+    }
   }
 
   setUserDirectory(UserDirectory, userDirectoryAddress, provider) {
