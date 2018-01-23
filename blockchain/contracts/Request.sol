@@ -38,8 +38,8 @@ contract Request {
     idpAddressList = _idpAddressList;
     asServiceAddressList = _asServiceAddressList;
     user = User(userAddress);
-    condition = user.conditionContract();
-    require(address(condition) != address(0));
+    //condition = user.conditionContract();
+    //require(address(condition) != address(0));
     authenticationComplete = false;
     idpResponse = new Response();
   }
