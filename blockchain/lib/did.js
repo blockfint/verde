@@ -1,5 +1,6 @@
+/* global web3:true */
+
 const Web3 = require('web3');
-var UserDirectory = artifacts.require('UserDirectory');
 
 export default class {
   constructor (Requests, requestsAddress, provider, fromAddress) {
@@ -13,18 +14,17 @@ export default class {
       gas: 3000000 
     });
     this.requests = Requests.at(requestsAddress);
+  }
 
-    // Deploy User Directory
-    UserDirectory.setProvider(this.provider);
+  setUserDirectory(UserDirectory, userDirectoryAddress, provider) {
+    UserDirectory.setProvider(provider);
     UserDirectory.defaults({
       from: this.fromAddress,
       gas: 3000000 
     });
-
-    UserDirectory.deployed().then((instance) => {
-      this.userDirectory = instance;
-    });
+    this.userDirectory = UserDirectory.at(userDirectoryAddress);
   }
+
   /*
   * Create a request.
   * Parameters

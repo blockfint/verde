@@ -6,6 +6,7 @@ var Requests = artifacts.require('Requests');
 var Request = artifacts.require('Request');
 // var Condition = artifacts.require('Condition');
 var User = artifacts.require('User');
+var UserDirectory = artifacts.require('UserDirectory');
 
 contract('DID', function(accounts) {
   let did;
@@ -17,6 +18,16 @@ contract('DID', function(accounts) {
           instance.address,
           web3.currentProvider,
           accounts[0]
+      );
+    }).then(() => done());
+  });
+
+  before('set up user directory', (done) => {
+    UserDirectory.deployed().then((instance) => {
+      did.setUserDirectory(
+        UserDirectory, 
+        instance.address, 
+        web3.currentProvider
       );
     }).then(() => done());
   });
