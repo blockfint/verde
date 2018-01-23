@@ -1,6 +1,6 @@
 pragma solidity ^0.4.17;
 
-import './Icondition.sol';
+import './ICondition.sol';
 
 contract User {
   address public owner;
