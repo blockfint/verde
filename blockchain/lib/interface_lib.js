@@ -89,10 +89,18 @@ export const ethereumInterface = {
   addIdpResponse
 };
 
+async function createUserWithCondition(id,condition) {
+  //let userContract = ethereum(RPC_HOST, RPC_PORT, process.env.USER_ADDR, RP_ADDR);
+  let user = await rpContract.user.new();
+  user.newUser(id, 'ssn', '130');
+  await user.setConditionContractAddress(condition);
+}
+
 export const rpInterface = {
   createRequest,
   watchIDPResponseEvent,
   watchAuthenticationEvent,
+  createUserWithCondition //tmporary
 };
 
 export const idpInterface = {

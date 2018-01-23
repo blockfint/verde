@@ -2,21 +2,27 @@ import { default as Did } from './lib/did';
 import { default as Web3 } from 'web3';
 import { default as contract } from 'truffle-contract';
 
-var requestJson,requestsJson,responseJson;
+var requestJson,requestsJson,responseJson,userJson,conditionJson;
 try {
   requestJson = require('./build/contracts/Request.json');
   responseJson = require('./build/contracts/Response.json');
   requestsJson = require('./build/contracts/Requests.json');
+  userJson = require('./build/contracts/User.json');
+  conditionJson = require('./build/contracts/Condition.json');
 }
 catch(error) {
   requestJson = require('./contracts/Request.json');
   responseJson = require('./contracts/Response.json');
   requestsJson = require('./contracts/Requests.json');
+  userJson = require('./contracts/User.json');
+  conditionJson = require('./contracts/Condition.json');
 }
 
 const Request = contract(requestJson);
 const Response = contract(responseJson);
 const Requests = contract(requestsJson);
+const User = contract(userJson);
+const Condition = contract(conditionJson);
 
 export default function (host, port, requestsAddress, fromAddress) {
   let provider = new Web3.providers.HttpProvider(`http:\/\/${host}:${port}`);
@@ -26,6 +32,8 @@ export default function (host, port, requestsAddress, fromAddress) {
       provider,
       fromAddress,
       Request,
-      Response
+      Response,
+      User,
+      Condition
   );
 }

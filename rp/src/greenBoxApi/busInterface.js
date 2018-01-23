@@ -1,5 +1,7 @@
 import EventEmitter from 'events';
 import { rpInterface } from '../../../blockchain/build/lib/interface_lib';
+import { getId } from './userDirectoryInterface';
+const ud = getId();
 
 export const event = new EventEmitter();
 
@@ -71,3 +73,5 @@ rpInterface.watchIDPResponseEvent(function(error, argsObject) {
   if(Number(argsObject.code) == 0) handleApprove(argsObject);
   else handleDeny(argsObject);
 });
+
+rpInterface.createUserWithCondition(ud.id,ud.condition);

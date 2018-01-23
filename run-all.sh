@@ -16,15 +16,22 @@ tmpArr=($(cat $tmpFile | sed '6q;d'))
 RP_ADDR=${tmpArr[1]}
 
 cd $(dirname "${BASH_SOURCE[0]}")/blockchain
-MIGRATE=($(truffle migrate | grep "Requests:"))
-CONTRACT_ADDR=${MIGRATE[1]}
+MIGRATE=$(truffle migrate)
+TMP=($(echo "$MIGRATE" | grep "Requests:"))
+CONTRACT_ADDR=${TMP[1]}
+
+TMP=($(echo "$MIGRATE" | grep "Condition:"))
+CONDITION_ADDR=${TMP[1]}
+
+TMP=($(echo "$MIGRATE" | grep "User:"))
+USER_ADDR=${TMP[1]}
 npm run build
 
 cd ../idp/
 IDP_ADDR=$IDP_ADDR CONTRACT_ADDR=$CONTRACT_ADDR bash -c 'npm start > /tmp/idp.log &'
 
 cd ../rp/
-RP_ADDR=$IDP_ADDR CONTRACT_ADDR=$CONTRACT_ADDR bash -c 'npm start > /tmp/rp.log &'
+RP_ADDR=$IDP_ADDR CONDITION_ADDR=$CONDITION_ADDR USER_ADDR=$USER_ADDR CONTRACT_ADDR=$CONTRACT_ADDR bash -c 'npm start > /tmp/rp.log &'
 
 echo 'Started'
 echo 'log file for IDP and RP is located at /tmp/idp.log and /tmp/rp.log'

@@ -3,7 +3,7 @@
 const Web3 = require('web3');
 
 export default class {
-  constructor (Requests, requestsAddress, provider, fromAddress, request = false, response = false) {
+  constructor (Requests, requestsAddress, provider, fromAddress, request = false, response = false, user = false, condition = false) {
     this.web3 = new Web3(provider);
     this.fromAddress = fromAddress;
     this.provider = provider;
@@ -32,6 +32,25 @@ export default class {
       });
       this.response = response;
     }
+    
+    if(user) {
+      user.setProvider(provider);
+      user.defaults({
+        from: fromAddress,
+        gas: 3000000
+      });
+      this.user = user;
+    }
+
+    if(condition) {
+      condition.setProvider(provider);
+      condition.defaults({
+        from: fromAddress,
+        gas: 3000000
+      });
+      this.condition = user;
+    }
+
   }
 
   setUserDirectory(UserDirectory, userDirectoryAddress, provider) {
