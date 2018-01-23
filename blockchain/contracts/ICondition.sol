@@ -1,6 +1,6 @@
 pragma solidity ^0.4.17;
 
-import './response.sol';
+import './Response.sol';
 
 contract ICondition {
   function Condition(uint _minimumResponseOKCount) public;

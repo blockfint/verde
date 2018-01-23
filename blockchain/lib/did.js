@@ -1,3 +1,5 @@
+/* global web3:true */
+
 const Web3 = require('web3');
 
 export default class {
@@ -9,7 +11,7 @@ export default class {
     Requests.setProvider(provider);
     Requests.defaults({
       from: fromAddress,
-      gas: 6000000 
+      gas: 3000000 
     });
     this.requests = Requests.at(requestsAddress);
 
@@ -27,17 +29,27 @@ export default class {
     });
     this.response = response;
   }
+
+  setUserDirectory(UserDirectory, userDirectoryAddress, provider) {
+    UserDirectory.setProvider(provider);
+    UserDirectory.defaults({
+      from: this.fromAddress,
+      gas: 3000000 
+    });
+    this.userDirectory = UserDirectory.at(userDirectoryAddress);
+  }
+
   /*
   * Create a request.
   * Parameters
-  *   userName : string
+  *   userAddress : string
   *   requestText : string
   * Returns
   *   requestID : string
   */
-  createRequest(userName, requestText, idpCount) {
+  createRequest(userAddress, requestText, idpCount) {
     return this.requests.createRequest(
-      userName, requestText, idpCount).then((result) => {
+      userAddress, requestText, idpCount).then((result) => {
         for(var i in result.logs) {
           if(result.logs[i].event === 'LogRequest')
             return Promise.resolve(result.logs[i].args.requestID);
@@ -51,10 +63,54 @@ export default class {
     return this.requests.getRequestCount();
   }
 
+  /*
+  * Create a user.
+  * Parameters
+  *   ownerAddress : string
+  *   namespace    : string
+  *   namespace    : string
+  * Returns
+  *   userContractAddress : string
+  */
+  createUser(ownerAddress, namespace, id) {
+    return this.userDirectory.findUserByNamespaceAndId(namespace, id)
+      .then((result) => {
+        if(web3.toDecimal(result) == 0) {
+          return this.newUser(ownerAddress, namespace, id)
+            .then((result) => {
+              return Promise.resolve(result);
+            })  ;
+        } else {
+          return Promise.resolve(result);
+        }
+    })
+    .catch(console.log.bind(console));
+  }
+
+  newUser(ownerAddress, namespace, id) {
+    return this.userDirectory.newUser(
+      ownerAddress, namespace, id).then((result) => {
+         for(var i in result.logs) {
+          if(result.logs[i].event === 'LogNewUser')
+            return Promise.resolve(result.logs[i].args.userContract);
+        }
+        return true;
+      })
+      .catch(console.log.bind(console));
+  }
+
+  getUserCount() {
+    return this.userDirectory.userCount()
+      .then((result) => {
+        return Promise.resolve(result);
+      })
+      .catch(console.log.bind(console));
+  }
+
   addIdpResponse(rid, code, status) {
     return this.requests.addIdpResponse(rid, code, status)
       .then(() => {
-        return Promise.resolve(true)
+        return Promise.resolve(true);
       })
       .catch(console.log.bind(console));
   }
@@ -70,7 +126,7 @@ export default class {
   *       console.error(error);
   */
   watchRequestEvent(callback) {
-    var event = this.requests.LogRequest();
+    var event = this.requests0.LogRequest();
     event.watch(callback);
   }
 

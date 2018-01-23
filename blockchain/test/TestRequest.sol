@@ -2,10 +2,10 @@ pragma solidity ^0.4.2;
 
 import "truffle/Assert.sol";
 import "truffle/DeployedAddresses.sol";
-import "../contracts/request.sol";
-import "../contracts/response.sol";
-import "../contracts/user.sol";
-import "../contracts/condition.sol";
+import "../contracts/Request.sol";
+import "../contracts/Response.sol";
+import "../contracts/User.sol";
+import "../contracts/Condition.sol";
 
 contract TestRequest {
 

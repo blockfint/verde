@@ -1,7 +1,7 @@
 pragma solidity ^0.4.17;
 
-import './icondition.sol';
-import './user.sol';
+import './ICondition.sol';
+import './User.sol';
 
 contract Request {
   address public rpAddress;
