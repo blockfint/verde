@@ -17,7 +17,7 @@ export default class {
       this.requests = Requests.at(requestsAddress);
     }
 
-    let { Request, Response, User, Condition, Directory, directoryAddress } = addtionalArgs;
+    let { Request, Response, User, Condition, UserDirectory, directoryAddress } = addtionalArgs;
 
     if(Request) {
       Request.setProvider(provider);
@@ -43,10 +43,10 @@ export default class {
       this.condition = Condition;
     }
 
-    if(Directory && directoryAddress) {
-      Directory.setProvider(provider);
-      Directory.defaults(defaultOptions);
-      this.userDirectory = Directory.at(directoryAddress);
+    if(UserDirectory && directoryAddress) {
+      UserDirectory.setProvider(provider);
+      UserDirectory.defaults(defaultOptions);
+      this.userDirectory = UserDirectory.at(directoryAddress);
     }
 
   }
