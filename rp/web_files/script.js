@@ -3,8 +3,16 @@ const socket = io('/');
 
 let requestId = null;
 
+const step1 = document.getElementById('step1');
+const step2 = document.getElementById('step2');
+
+const noSelectedIdpAlert = document.getElementById('noSelectedIdpAlert');
+
 const requestIdElement = document.getElementById('requestId');
 const statusElement = document.getElementById('status');
+const circleLoader = document.getElementsByClassName('circle-loader')[0];
+const loaderCheckmark = document.getElementsByClassName('checkmark')[0];
+
 const idpsElement = document.getElementById('idps');
 
 const verifyButton = document.getElementById('verify');
@@ -21,9 +29,9 @@ window.addEventListener('load', () => {
     .then(json => {
       const idps = json.idps;
       const idpListItems = idps.map(idp => {
-        const ele = `<div>
-          <span>${idp.name}</span>
-          <input type="checkbox" name="idp-${idp.id}" data-id="${idp.id}">
+        const ele = `<div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="checkbox-${idp.id}" name="idp-${idp.id} data-id="${idp.id}>
+          <label class="custom-control-label" for="checkbox-${idp.id}">${idp.name}</label>
         </div>`;
         return ele;
       });
@@ -36,8 +44,11 @@ function sendVerifyRequest(hideSourceRp = false) {
   const selectedIdps = selectedIdpElements.filter(ele => ele.checked === true).map(ele => ele.dataset.id);
 
   if (selectedIdps.length > 0) {
-    statusElement.textContent = 'Pending...';
-    statusElement.style = '';
+    step1.classList.add('d-none');
+    step2.classList.remove('d-none');
+
+    statusElement.textContent = 'Waiting for your verification...';
+    // statusElement.style = '';
 
     fetch('/verifyIdentity', {
       method: 'POST',
@@ -58,19 +69,24 @@ function sendVerifyRequest(hideSourceRp = false) {
         requestIdElement.textContent = 'Request ID: ' + requestId;
       });
   } else {
-    statusElement.textContent = 'Please select at least one IDP';
-    statusElement.style = '';
+    noSelectedIdpAlert.classList.remove('d-none');
   }
 }
 
 socket.on('success', (data) => {
   if (data.requestId === requestId) {
-    statusElement.textContent = 'Success!';
+    statusElement.textContent = 'Verification Success!';
+    circleLoader.classList.add('load-complete');
+    loaderCheckmark.classList.add('draw');
+    loaderCheckmark.style = 'display:block;';
   }
 });
 
 socket.on('fail', (data) => {
   if (data.requestId === requestId) {
-    statusElement.textContent = 'Failed!';
+    statusElement.textContent = 'Verification Failed!';
+    circleLoader.classList.add('load-error');
+    loaderCheckmark.classList.add('error');
+    loaderCheckmark.style = 'display:block;';
   }
 });
