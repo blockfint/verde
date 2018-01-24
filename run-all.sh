@@ -16,6 +16,7 @@ tmpArr=($(cat $tmpFile | sed '6q;d'))
 RP_ADDR=${tmpArr[1]}
 
 cd $(dirname "${BASH_SOURCE[0]}")/blockchain
+rm ./build/contracts/*.json
 MIGRATE=$(truffle migrate)
 
 TMP=($(echo "$MIGRATE" | grep "Requests:"))

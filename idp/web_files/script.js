@@ -18,7 +18,7 @@ function updateRequestList(json) {
 window.addEventListener('load', () => {
   var userId = window.location.href.split('/');
   userId = userId[userId.length-1];
-  if(!userId) window.location = '/home/0x3355';
+  if(!userId) window.location = '/home/1100023145268';
   fetch('/getPendingList/' + userId).then((response) => {
     return response.json();
   }).then((json) => {

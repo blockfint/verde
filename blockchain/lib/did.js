@@ -130,7 +130,7 @@ export default class {
       .catch(console.log.bind(console));
   }
 
-  findUserAddress(namespace, id) {
+  findUserAddress(namespace = 'cid', id) {
     return this.userDirectory.findUserByNamespaceAndId(namespace, id)
       .then((result) => {
         return Promise.resolve(result);
@@ -177,10 +177,10 @@ export default class {
       let pendingList = [];
       for(let i = 0 ; i < count ; i++) {
         let requestContract = await this.requests.getRequest(i);
-        //TODO check pending
         let tmpRequest = this.request.at(requestContract);
         let responseContract = await tmpRequest.getIdpResponse();
         let tmpResponse = this.response.at(responseContract);
+        //TODO check match userAddress
         if(!(await tmpResponse.didIRespond())) {
           pendingList.push({
             requestID: requestContract,
@@ -190,7 +190,8 @@ export default class {
           });
         }
       }
-      return [null,pendingList];
+      let result = pendingList.filter(request => request.userAddress === userAddress);
+      return [null,result];
     }
     catch(error) { 
       console.error('Cannot get pending',error);

@@ -83,8 +83,12 @@ function watchAuthenticationEvent(requestId, callback) {
   });
 }
 
-function getPendingRequests(userId,callback) {
-  return idpContract.getPendingRequests(userId,callback);
+function getPendingRequests(userId) {
+  return new Promise(function(resolve,reject) {
+    findUserAddress('cid', userId).then(function(userAddress) {
+      resolve(idpContract.getPendingRequests(userAddress));
+    });
+  });
 }
 
 function createUser(namespace, id) {
@@ -106,13 +110,6 @@ export const ethereumInterface = {
   findUserAddress 
 };
 
-/*async function createUserWithCondition(id,namespace,conditionAddress) {
-  let user = await rpContract.user.new();
-  userAddress = user.address;
-  user.newUser(id, namespace, '130');
-  await user.setConditionContractAddress(conditionAddress);
-}*/
-
 export const rpInterface = {
   createRequest,
   watchIDPResponseEvent,
@@ -124,7 +121,6 @@ export const idpInterface = {
   watchRequestEvent,
   getPendingRequests,
   addIdpResponse,
-  //createUserWithCondition //tmporary
   createUser,
   findUserAddress
 }
