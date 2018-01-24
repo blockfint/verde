@@ -6,24 +6,59 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/style.css">
   </head>
   <body>
-    <h1>RP-1</h1>
+    <nav class="navbar navbar-light bg-light">
+      <span class="navbar-brand mb-0 h1">RP-1</span>
+    </nav>
+    
+    <div class="container">
 
-    <div id="idps"></div>
+      <div class="content">
 
-    <div>
-      <button id="verify">Verify Your Identity</button>
-      <button id="verifyHideSourceRp">Verify Your Identity (Hide Source RP)</button>
-    </div>
+        <div class="card" style="width: 36rem;">
+          <div class="card-body">
+            <h5 class="card-title">Identity Verification</h5>
 
-    <div id="requestId"></div>
-    <div id="status" style="display:none">
-      Pending...
+            <div id="step1">
+              <p class="card-text">We need you to verify that it is actually you who wants to make a transaction with us. Please select IDP(s) below you want to use to verify your identity.</p>
+
+              <div id="noSelectedIdpAlert" class="alert alert-warning d-none" role="alert">
+                Please select at least one IDP
+              </div>
+
+              <div id="idps"></div>
+
+              <div>
+                <button id="verify" class="btn btn-primary">Verify Your Identity</button>
+                <button id="verifyHideSourceRp" class="btn btn-primary">Verify Your Identity (Hide Source RP)</button>
+              </div>
+
+            </div>
+
+            <div id="step2" class="d-none">
+              <p class="card-text">Please verify your identity with IDP(s) you selected.</p>
+              <p id="requestId">Request ID:</p>
+
+              <div class="status-container">
+                <div class="circle-loader">
+                  <div class="checkmark"></div>
+                </div>
+                <div id="status"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
     <script src="/script.js"></script>
   </body>
 </html>
