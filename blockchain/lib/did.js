@@ -3,52 +3,42 @@
 const Web3 = require('web3');
 
 export default class {
-  constructor (Requests, requestsAddress, provider, fromAddress, request = false, response = false, user = false, condition = false) {
+  constructor (Requests, requestsAddress, provider, fromAddress, Request = false, Response = false, User = false, Condition = false) {
     this.web3 = new Web3(provider);
     this.fromAddress = fromAddress;
     this.provider = provider;
 
-    Requests.setProvider(provider);
-    Requests.defaults({
+    let defaultOptions = {
       from: fromAddress,
       gas: 3000000 
-    });
+    };
+
+    Requests.setProvider(provider);
+    Requests.defaults(defaultOptions);
     this.requests = Requests.at(requestsAddress);
 
-    if(request) {
-      request.setProvider(provider);
-      request.defaults({
-        from: fromAddress,
-        gas: 3000000 
-      });
-      this.request = request;
+    if(Request) {
+      Request.setProvider(provider);
+      Request.defaults(defaultOptions);
+      this.request = Request;
     }
 
-    if(response) {
-      response.setProvider(provider);
-      response.defaults({
-        from: fromAddress,
-        gas: 3000000 
-      });
-      this.response = response;
+    if(Response) {
+      Response.setProvider(provider);
+      Response.defaults(defaultOptions);
+      this.response = Response;
     }
     
-    if(user) {
-      user.setProvider(provider);
-      user.defaults({
-        from: fromAddress,
-        gas: 3000000
-      });
-      this.user = user;
+    if(User) {
+      User.setProvider(provider);
+      User.defaults(defaultOptions);
+      this.user = User;
     }
 
-    if(condition) {
-      condition.setProvider(provider);
-      condition.defaults({
-        from: fromAddress,
-        gas: 3000000
-      });
-      this.condition = user;
+    if(Condition) {
+      Condition.setProvider(provider);
+      Condition.defaults(defaultOptions);
+      this.condition = Condition;
     }
 
   }

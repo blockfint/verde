@@ -3,11 +3,11 @@ import ethereum from '../index';
 
 const RPC_HOST = 'localhost';
 const RPC_PORT = '8545';
-const CONTRACT_ADDR = process.env.CONTRACT_ADDR;
+const CONTRACT_ADDR = process.env.REQUESTS_CONTRACT_ADDR;
 const IDP_ADDR = process.env.IDP_ADDR;
 const RP_ADDR = process.env.RP_ADDR;
 
-var idpContract, rpContract;
+var idpContract, rpContract,userAddress;
 
 if(!IDP_ADDR && !RP_ADDR) {
   throw('Must specify RP_ADDR or IDP_ADDR');
@@ -33,7 +33,7 @@ if(RP_ADDR)
 
 function createRequest({ userId, requestText }) {
   //should return request id
-  return rpContract.createRequest(userId,requestText,0);
+  return rpContract.createRequest(userAddress,requestText,0);
 }
 
 function addIdpResponse({ requestId, approve }) {
@@ -89,11 +89,11 @@ export const ethereumInterface = {
   addIdpResponse
 };
 
-async function createUserWithCondition(id,condition) {
-  //let userContract = ethereum(RPC_HOST, RPC_PORT, process.env.USER_ADDR, RP_ADDR);
+async function createUserWithCondition(id,conditionAddress) {
   let user = await rpContract.user.new();
+  userAddress = user.address;
   user.newUser(id, 'ssn', '130');
-  await user.setConditionContractAddress(condition);
+  await user.setConditionContractAddress(conditionAddress);
 }
 
 export const rpInterface = {

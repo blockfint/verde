@@ -3,6 +3,6 @@ export const getId = (userId) => {
     name: 'Foo',
     lastname: 'Bar',
     id: '0x3355',
-    condition: process.env.CONDITION_ADDR
+    condition: process.env.CONDITION_CONTRACT_ADDR
   };
 };
