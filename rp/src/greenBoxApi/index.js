@@ -1,7 +1,4 @@
-// const busInterface = require('./busInterface');
 import * as busInterface from './busInterface';
-
-// const userDirectoryInterface = require('./userDirectoryInterface');
 import * as userDirectoryInterface from './userDirectoryInterface';
 
 // Wait for all event.
@@ -24,10 +21,10 @@ busInterface.event.on('error', function(error) {
       errorCode + ", msg: " + errorMsg);
 });
 
-const IDENTIFICATION_NUMBER = '1100023145268';
-
-// Read the user directory
-const user = userDirectoryInterface.getId(IDENTIFICATION_NUMBER);
+const user = {
+  id: '1100023145268',
+  namespace: 'cid'
+}
 
 export const requestAuthen = async (idps, hideSourceRpId) => {
   const requestId = await busInterface.createIdpRequest(user, idps, hideSourceRpId);

@@ -1,9 +1,7 @@
-/* global web3:true */
-
 const Web3 = require('web3');
 
 export default class {
-  constructor (Requests, requestsAddress, provider, fromAddress, Request = false, Response = false, User = false, Condition = false) {
+  constructor (Requests = false, requestsAddress, provider, fromAddress, addtionalArgs) {
     this.web3 = new Web3(provider);
     this.fromAddress = fromAddress;
     this.provider = provider;
@@ -13,9 +11,13 @@ export default class {
       gas: 3000000 
     };
 
-    Requests.setProvider(provider);
-    Requests.defaults(defaultOptions);
-    this.requests = Requests.at(requestsAddress);
+    if(Requests && requestsAddress) {
+      Requests.setProvider(provider);
+      Requests.defaults(defaultOptions);
+      this.requests = Requests.at(requestsAddress);
+    }
+
+    let { Request, Response, User, Condition, UserDirectory, directoryAddress } = addtionalArgs;
 
     if(Request) {
       Request.setProvider(provider);
@@ -41,16 +43,22 @@ export default class {
       this.condition = Condition;
     }
 
+    if(UserDirectory && directoryAddress) {
+      UserDirectory.setProvider(provider);
+      UserDirectory.defaults(defaultOptions);
+      this.userDirectory = UserDirectory.at(directoryAddress);
+    }
+
   }
 
-  setUserDirectory(UserDirectory, userDirectoryAddress, provider) {
+  /*setUserDirectory(UserDirectory, userDirectoryAddress, provider) {
     UserDirectory.setProvider(provider);
     UserDirectory.defaults({
       from: this.fromAddress,
       gas: 3000000 
     });
     this.userDirectory = UserDirectory.at(userDirectoryAddress);
-  }
+  }*/
 
   /*
   * Create a request.
@@ -88,7 +96,7 @@ export default class {
   createUser(ownerAddress, namespace, id) {
     return this.userDirectory.findUserByNamespaceAndId(namespace, id)
       .then((result) => {
-        if(web3.toDecimal(result) == 0) {
+        if(this.web3.toDecimal(result) == 0) {
           return this.newUser(ownerAddress, namespace, id)
             .then((result) => {
               return Promise.resolve(result);
@@ -120,6 +128,14 @@ export default class {
       .catch(console.log.bind(console));
   }
 
+  findUserAddress(namespace = 'cid', id) {
+    return this.userDirectory.findUserByNamespaceAndId(namespace, id)
+      .then((result) => {
+        return Promise.resolve(result);
+      })
+    .catch(console.log.bind(console));
+  }
+
   addIdpResponse(rid, code, status) {
     return this.requests.addIdpResponse(rid, code, status)
       .then(() => {
@@ -143,12 +159,12 @@ export default class {
     event.watch(callback);
   }
 
-  watchIdpEvent(callback) {
+  watchIdpResponse(callback) {
     var event = this.requests.IdpResponse();
     event.watch(callback);
   }
 
-  watchAuthenticationEvent(requestId,callback) {
+  watchAuthenticationEvent(requestId, callback) {
     var event = this.request.at(requestId).LogConditionComplete();
     event.watch(callback);
   }
@@ -159,17 +175,19 @@ export default class {
       let pendingList = [];
       for(let i = 0 ; i < count ; i++) {
         let requestContract = await this.requests.getRequest(i);
-        //TODO check pending
         let tmpRequest = this.request.at(requestContract);
         let responseContract = await tmpRequest.getIdpResponse();
         let tmpResponse = this.response.at(responseContract);
+        //TODO check match userAddress
         if(!(await tmpResponse.didIRespond())) {
-          pendingList.push({
-            requestID: requestContract,
-            userAddress: await tmpRequest.userAddress(),
-            rpAddress: await tmpRequest.rpAddress(),
-            requestText: await tmpRequest.requestText()
-          });
+          if(await tmpRequest.userAddress() == userAddress) {
+            pendingList.push({
+              requestID: requestContract,
+              userAddress: await tmpRequest.userAddress(),
+              rpAddress: await tmpRequest.rpAddress(),
+              requestText: await tmpRequest.requestText()
+            });
+          }
         }
       }
       return [null,pendingList];

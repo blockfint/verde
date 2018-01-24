@@ -1,7 +1,5 @@
 import EventEmitter from 'events';
 import { rpInterface } from '../../../blockchain/build/lib/interface_lib';
-import { getId } from './userDirectoryInterface';
-const ud = getId();
 
 export const event = new EventEmitter();
 
@@ -10,18 +8,14 @@ export const event = new EventEmitter();
 // TO-DO
 // interface with bus/blockchain
 
-function handleApprove(requestId) {
-  console.log('approve');
-  /*event.emit('success', {
-    requestId: requestId
-  });*/
+function handleApprove(argsObject) {
+  //console.log('approve',argsObject);
+  event.emit('approve', argsObject);
 }
 
-function handleDeny(requestId) {
-  console.log('deny');
-  /*event.emit('error', {
-    requestId: requestId
-  });*/
+function handleDeny(argsObject) {
+  //console.log('deny',argsObject);
+  event.emit('deny', argsObject);
 }
 
 function handleAuthenFail(requestId) {
@@ -37,11 +31,9 @@ function handleAuthenSuccess(requestId) {
 }
 
 export const createIdpRequest = async (user, idps, hideSourceRpId = false) => {
-  // TO-DO
-  // do something with blockchain
-  
+  let userAddress = await rpInterface.findUserAddress(user.namespace,user.id);
   let requestId = await rpInterface.createRequest({
-    userId: user.id,
+    userAddress: userAddress,
     requestText: 'Mockup request details'
   }); 
 
@@ -69,9 +61,10 @@ export const createIdpRequest = async (user, idps, hideSourceRpId = false) => {
 
 rpInterface.watchIDPResponseEvent(function(error, argsObject) {
   if(error) console.error('error:',error);
+  argsObject.requestId = argsObject.requestID;
+  delete argsObject.requestID;
+
   //check whether approve or denied
   if(Number(argsObject.code) == 0) handleApprove(argsObject);
   else handleDeny(argsObject);
 });
-
-rpInterface.createUserWithCondition(ud.id,ud.condition);

@@ -1,13 +1,13 @@
 import busInterface from './busInterface';
 
-function handleRequest({ userId, requestId, rpId, data }) {
+function handleRequest({ userAddress, requestId, rpAddress, data }) {
   console.log(
-    'Received new request for userId:',
-    userId,
+    'Received new request for userAddress:',
+    userAddress,
     'with requestId:',
     requestId,
-    'from rpId:',
-    rpId,
+    'from rpAddress:',
+    rpAddress,
     'with data:',
     data
   );

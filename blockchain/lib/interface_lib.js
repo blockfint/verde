@@ -3,11 +3,12 @@ import ethereum from '../index';
 
 const RPC_HOST = 'localhost';
 const RPC_PORT = '8545';
-const CONTRACT_ADDR = process.env.REQUESTS_CONTRACT_ADDR;
+const REQUESTS_CONTRACT_ADDR = process.env.REQUESTS_CONTRACT_ADDR;
+const DIRECTORY_CONTRACT_ADDR = process.env.DIRECTORY_CONTRACT_ADDR;
 const IDP_ADDR = process.env.IDP_ADDR;
 const RP_ADDR = process.env.RP_ADDR;
 
-var idpContract, rpContract,userAddress;
+var idpContract, rpContract, directoryContract, userAddress;
 
 if(!IDP_ADDR && !RP_ADDR) {
   throw('Must specify RP_ADDR or IDP_ADDR');
@@ -15,10 +16,16 @@ if(!IDP_ADDR && !RP_ADDR) {
 
 //contract instance
 if(IDP_ADDR)
-  idpContract = ethereum(RPC_HOST, RPC_PORT, CONTRACT_ADDR, IDP_ADDR);
+  idpContract = ethereum(RPC_HOST, RPC_PORT, REQUESTS_CONTRACT_ADDR, IDP_ADDR);
 
 if(RP_ADDR)
-  rpContract = ethereum(RPC_HOST, RPC_PORT, CONTRACT_ADDR, RP_ADDR);
+  rpContract = ethereum(RPC_HOST, RPC_PORT, REQUESTS_CONTRACT_ADDR, RP_ADDR);
+
+if(DIRECTORY_CONTRACT_ADDR) {
+  directoryContract = ethereum(RPC_HOST, RPC_PORT, false, IDP_ADDR, { 
+    directoryAddress: DIRECTORY_CONTRACT_ADDR
+  });
+}
 
 /*
  * Create a request.
@@ -31,13 +38,13 @@ if(RP_ADDR)
  *  requestID : string
 */
 
-function createRequest({ userId, requestText }) {
+function createRequest({ userAddress, requestText }) {
   //should return request id
   return rpContract.createRequest(userAddress,requestText,0);
 }
 
-function addIdpResponse({ requestId, approve }) {
-  idpContract.addIdpResponse(requestId, approve, 'Mock up message');
+function addIdpResponse({ requestId, code }) {
+  idpContract.addIdpResponse(requestId, code, 'Mock up message');
 }
 
 /* 
@@ -61,7 +68,7 @@ function watchRequestEvent(callback) {
 }
 
 function watchIDPResponseEvent(callback) {
-  rpContract.watchIdpEvent(function(error, eventObject) {
+  rpContract.watchIdpResponse(function(error, eventObject) {
     if(error) return callback(error);
     //filter only for those event concern RP_ADDR
     callback(null, eventObject.args)
@@ -76,8 +83,17 @@ function watchAuthenticationEvent(requestId, callback) {
   });
 }
 
-function getPendingRequests(userId,callback) {
-  return idpContract.getPendingRequests(userId,callback);
+async function getPendingRequests(userId) {
+  let userAddress = await findUserAddress('cid', userId);
+  return idpContract.getPendingRequests(userAddress);
+}
+
+function createUser(namespace, id) {
+  return directoryContract.createUser(IDP_ADDR, namespace, id);
+}
+
+function findUserAddress(namespace, id) {
+  return directoryContract.findUserAddress(namespace, id);
 }
 
 export const ethereumInterface = {
@@ -86,27 +102,24 @@ export const ethereumInterface = {
   watchIDPResponseEvent,
   watchAuthenticationEvent,
   getPendingRequests,
-  addIdpResponse
+  addIdpResponse,
+  createUser,
+  findUserAddress 
 };
-
-async function createUserWithCondition(id,conditionAddress) {
-  let user = await rpContract.user.new();
-  userAddress = user.address;
-  user.newUser(id, 'ssn', '130');
-  await user.setConditionContractAddress(conditionAddress);
-}
 
 export const rpInterface = {
   createRequest,
   watchIDPResponseEvent,
   watchAuthenticationEvent,
-  createUserWithCondition //tmporary
+  findUserAddress
 };
 
 export const idpInterface = {
   watchRequestEvent,
   getPendingRequests,
-  addIdpResponse
+  addIdpResponse,
+  createUser,
+  findUserAddress
 }
 
 export default ethereumInterface;

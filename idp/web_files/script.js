@@ -5,20 +5,17 @@ const loadingIndicators = document.getElementsByClassName('loading-indicator');
 
 window.addEventListener('load', () => {
   var userId = window.location.href.split('/');
-  userId = userId[userId.length - 1];
-  if (!userId) window.location = '/home/0x3355';
-  fetch('/getPendingList/' + userId)
-    .then(response => {
-      return response.json();
-    })
-    .then(json => {
-      console.log(json);
-      hideLoadingIndicators();
-      updateRequestList(json);
-    })
-    .catch(function(error) {
-      console.error(error);
-    });
+  userId = userId[userId.length-1];
+  if(!userId) window.location = '/home/1100023145268';
+  fetch('/getPendingList/' + userId).then((response) => {
+    return response.json();
+  }).then((json) => {
+    console.log(json);
+    hideLoadingIndicators();
+    updateRequestList(json);
+  }).catch(function(error) {
+    console.error(error);
+  });
 });
 
 function hideLoadingIndicators() {
@@ -67,7 +64,8 @@ function createListItem(requestObject) {
   let infoDiv = document.createElement('div');
   infoDiv.classList.add('request-info');
   infoDiv.innerHTML = `<div>Request ID: ${requestObject.requestId}</div>
-    <div>RP ID: ${requestObject.rpId}</div>
+    <div>RP Address: ${requestObject.rpAddress}</div>
+    <div>User Address: ${requestObject.userAddress}</div>
     <div>Data: ${requestObject.data}</div>`;
   li.appendChild(infoDiv);
 

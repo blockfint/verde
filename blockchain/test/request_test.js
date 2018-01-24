@@ -48,7 +48,6 @@ contract('Request', function(accounts) {
   let response;
   let idpMsg1 = 'OK: IDP1';
   let idpMsg2 = 'ERROR';
-  let code;
   let msg;
   it('should have idp response', async () => {
     console.log('req: ' + request);
