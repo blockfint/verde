@@ -11,28 +11,29 @@ var UserDirectory = artifacts.require('UserDirectory');
 
 contract('DID', function(accounts) {
   let did;
+  let userDirectoryAddress;
 
-  before('set up requests', (done) => {
-    Requests.deployed().then((instance) => {
-      did = new Did(
-          Requests,
-          instance.address,
-          web3.currentProvider,
-          accounts[0],
-          Request,
-          Response,
-          User,
-          Condition
-      );
+  before('deploy user directory', (done) => {
+    UserDirectory.deployed().then((instance) => {
+      userDirectoryAddress = instance.address;
     }).then(() => done());
   });
 
-  before('set up user directory', (done) => {
-    UserDirectory.deployed().then((instance) => {
-      did.setUserDirectory(
-        UserDirectory, 
-        instance.address, 
-        web3.currentProvider
+  before('set up requests', (done) => {
+    Requests.deployed().then((instance) => {
+      did = new Did (
+        Requests,
+        instance.address,
+        web3.currentProvider,
+        accounts[0],
+        {
+          Request,
+          Response,
+          User,
+          Condition,
+          UserDirectory,
+          directoryAddress: userDirectoryAddress
+        }
       );
     }).then(() => done());
   });
@@ -44,8 +45,6 @@ contract('DID', function(accounts) {
       condition = instance;
     }).then(() => done());
   });
-  
-
   
   let user;
   before('set up user', (done) => {
