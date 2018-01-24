@@ -161,7 +161,7 @@ export default class {
     event.watch(callback);
   }
 
-  watchIdpEvent(callback) {
+  watchIdpResponse(callback) {
     var event = this.requests.IdpResponse();
     event.watch(callback);
   }

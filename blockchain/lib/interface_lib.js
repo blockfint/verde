@@ -43,8 +43,8 @@ function createRequest({ userAddress, requestText }) {
   return rpContract.createRequest(userAddress,requestText,0);
 }
 
-function addIdpResponse({ requestId, approve }) {
-  idpContract.addIdpResponse(requestId, approve, 'Mock up message');
+function addIdpResponse({ requestId, code }) {
+  idpContract.addIdpResponse(requestId, code, 'Mock up message');
 }
 
 /* 
@@ -68,7 +68,7 @@ function watchRequestEvent(callback) {
 }
 
 function watchIDPResponseEvent(callback) {
-  rpContract.watchIdpEvent(function(error, eventObject) {
+  rpContract.watchIdpResponse(function(error, eventObject) {
     if(error) return callback(error);
     //filter only for those event concern RP_ADDR
     callback(null, eventObject.args)
@@ -83,12 +83,9 @@ function watchAuthenticationEvent(requestId, callback) {
   });
 }
 
-function getPendingRequests(userId) {
-  return new Promise(function(resolve,reject) {
-    findUserAddress('cid', userId).then(function(userAddress) {
-      resolve(idpContract.getPendingRequests(userAddress));
-    });
-  });
+async function getPendingRequests(userId) {
+  let userAddress = await findUserAddress('cid', userId);
+  return idpContract.getPendingRequests(userAddress);
 }
 
 function createUser(namespace, id) {
