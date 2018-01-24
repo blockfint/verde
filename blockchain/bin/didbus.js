@@ -135,7 +135,9 @@ let command = argv._[0];
 if (command === 'request') {
   // console.log('CREATE ARGV' + JSON.stringify(argv));
   let { id, host, port, rp, ra ,uda} = argv;
-  let did = initializeLib(host, port, ra, rp, uda);
+  let did = initializeLib(host, port, ra, rp, { 
+    directoryAddress: uda
+  });
   did.createUser(rp, NAMESPACE, id) 
     .then((userAddress) => {
       did.createRequest(userAddress, REQUEST_STRING, IDP_COUNT) 
@@ -154,7 +156,9 @@ if (command === 'response') {
 if (command === 'createUser') {
   // console.log('CREATE USER ARGV' + JSON.stringify(argv));
   let { host, port, rp, ra, id, uda} = argv;
-  let did = initializeLib(host, port, ra, rp, uda);
+  let did = initializeLib(host, port, ra, rp, { 
+    directoryAddress: uda
+  });
   did.createUser(rp, NAMESPACE, id) 
     .then((result) => console.log('Created user id '+ id +' at ' + result));
 }
@@ -162,7 +166,9 @@ if (command === 'createUser') {
 if (command === 'pendingRequest') {
   // console.log('GET PENDING REQUEST ARGV' + JSON.stringify(argv));
   let { id, host, port, rp, ra ,uda} = argv;
-  let did = initializeLib(host, port, ra, rp, uda);
+  let did = initializeLib(host, port, ra, rp, { 
+    directoryAddress: uda
+  });
   did.createUser(rp, NAMESPACE, id) 
     .then((userAddress) => {
       did.getPendingRequests(userAddress) 
