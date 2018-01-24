@@ -1,7 +1,7 @@
 import EventEmitter from 'events';
 import { rpInterface } from '../../../blockchain/build/lib/interface_lib';
-import { getId } from './userDirectoryInterface';
-const ud = getId();
+//import { getId } from './userDirectoryInterface';
+//const ud = getId();
 
 export const event = new EventEmitter();
 
@@ -39,9 +39,9 @@ function handleAuthenSuccess(requestId) {
 export const createIdpRequest = async (user, idps, hideSourceRpId = false) => {
   // TO-DO
   // do something with blockchain
-  
+  user = await user; 
   let requestId = await rpInterface.createRequest({
-    userId: user.id,
+    userAddress: user.id,
     requestText: 'Mockup request details'
   }); 
 
@@ -74,4 +74,4 @@ rpInterface.watchIDPResponseEvent(function(error, argsObject) {
   else handleDeny(argsObject);
 });
 
-rpInterface.createUserWithCondition(ud.id,ud.condition);
+//rpInterface.createUserWithCondition(ud.id,ud.condition);

@@ -54,6 +54,8 @@ const busInterface = {
 
 export default busInterface; 
 
+idpInterface.createUser('cid','1100023145268');
+
 //========================================================================================
 /*
 const ipc = require('node-ipc');

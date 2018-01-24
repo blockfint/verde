@@ -25,9 +25,10 @@ busInterface.event.on('error', function(error) {
 });
 
 const IDENTIFICATION_NUMBER = '1100023145268';
+const NAMESPACE = 'cid';
 
 // Read the user directory
-const user = userDirectoryInterface.getId(IDENTIFICATION_NUMBER);
+const user = userDirectoryInterface.getId(NAMESPACE,IDENTIFICATION_NUMBER);
 
 export const requestAuthen = async (idps, hideSourceRpId) => {
   const requestId = await busInterface.createIdpRequest(user, idps, hideSourceRpId);

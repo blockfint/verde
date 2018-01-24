@@ -3,7 +3,7 @@
 const Web3 = require('web3');
 
 export default class {
-  constructor (Requests, requestsAddress, provider, fromAddress, Request = false, Response = false, User = false, Condition = false) {
+  constructor (Requests = false, requestsAddress, provider, fromAddress, addtionalArgs) {
     this.web3 = new Web3(provider);
     this.fromAddress = fromAddress;
     this.provider = provider;
@@ -13,9 +13,13 @@ export default class {
       gas: 3000000 
     };
 
-    Requests.setProvider(provider);
-    Requests.defaults(defaultOptions);
-    this.requests = Requests.at(requestsAddress);
+    if(Requests && requestsAddress) {
+      Requests.setProvider(provider);
+      Requests.defaults(defaultOptions);
+      this.requests = Requests.at(requestsAddress);
+    }
+
+    let { Request, Response, User, Condition, Directory, directoryAddress } = addtionalArgs;
 
     if(Request) {
       Request.setProvider(provider);
@@ -41,16 +45,22 @@ export default class {
       this.condition = Condition;
     }
 
+    if(Directory && directoryAddress) {
+      Directory.setProvider(provider);
+      Directory.defaults(defaultOptions);
+      this.userDirectory = Directory.at(directoryAddress);
+    }
+
   }
 
-  setUserDirectory(UserDirectory, userDirectoryAddress, provider) {
+  /*setUserDirectory(UserDirectory, userDirectoryAddress, provider) {
     UserDirectory.setProvider(provider);
     UserDirectory.defaults({
       from: this.fromAddress,
       gas: 3000000 
     });
     this.userDirectory = UserDirectory.at(userDirectoryAddress);
-  }
+  }*/
 
   /*
   * Create a request.
@@ -88,7 +98,7 @@ export default class {
   createUser(ownerAddress, namespace, id) {
     return this.userDirectory.findUserByNamespaceAndId(namespace, id)
       .then((result) => {
-        if(web3.toDecimal(result) == 0) {
+        if(this.web3.toDecimal(result) == 0) {
           return this.newUser(ownerAddress, namespace, id)
             .then((result) => {
               return Promise.resolve(result);
@@ -118,6 +128,14 @@ export default class {
         return Promise.resolve(result);
       })
       .catch(console.log.bind(console));
+  }
+
+  findUserAddress(namespace, id) {
+    return this.userDirectory.findUserByNamespaceAndId(namespace, id)
+      .then((result) => {
+        return Promise.resolve(result);
+      })
+    .catch(console.log.bind(console));
   }
 
   addIdpResponse(rid, code, status) {
