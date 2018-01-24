@@ -1,5 +1,3 @@
-/* global web3:true */
-
 const Web3 = require('web3');
 
 export default class {
@@ -88,7 +86,7 @@ export default class {
   createUser(ownerAddress, namespace, id) {
     return this.userDirectory.findUserByNamespaceAndId(namespace, id)
       .then((result) => {
-        if(web3.toDecimal(result) == 0) {
+        if(this.web3.toDecimal(result) == 0) {
           return this.newUser(ownerAddress, namespace, id)
             .then((result) => {
               return Promise.resolve(result);
@@ -148,7 +146,7 @@ export default class {
     event.watch(callback);
   }
 
-  watchAuthenticationEvent(requestId,callback) {
+  watchAuthenticationEvent(requestId, callback) {
     var event = this.request.at(requestId).LogConditionComplete();
     event.watch(callback);
   }
@@ -164,12 +162,14 @@ export default class {
         let responseContract = await tmpRequest.getIdpResponse();
         let tmpResponse = this.response.at(responseContract);
         if(!(await tmpResponse.didIRespond())) {
-          pendingList.push({
-            requestID: requestContract,
-            userAddress: await tmpRequest.userAddress(),
-            rpAddress: await tmpRequest.rpAddress(),
-            requestText: await tmpRequest.requestText()
-          });
+          if(await tmpRequest.userAddress() == userAddress) {
+            pendingList.push({
+              requestID: requestContract,
+              userAddress: await tmpRequest.userAddress(),
+              rpAddress: await tmpRequest.rpAddress(),
+              requestText: await tmpRequest.requestText()
+            });
+          }
         }
       }
       return [null,pendingList];
