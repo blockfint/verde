@@ -75,7 +75,7 @@ function sendVerifyRequest(hideSourceRp = false) {
 
 socket.on('success', (data) => {
   if (data.requestId === requestId) {
-    statusElement.textContent = 'Verification Success!';
+    statusElement.textContent = 'Verification Successful!';
     circleLoader.classList.add('load-complete');
     loaderCheckmark.classList.add('draw');
     loaderCheckmark.style = 'display:block;';
