@@ -4,7 +4,8 @@
 import { default as Did } from '../lib/did';
 var Requests = artifacts.require('Requests');
 var Request = artifacts.require('Request');
-// var Condition = artifacts.require('Condition');
+var Response = artifacts.require('Response');
+var Condition = artifacts.require('Condition');
 var User = artifacts.require('User');
 var UserDirectory = artifacts.require('UserDirectory');
 
@@ -17,7 +18,11 @@ contract('DID', function(accounts) {
           Requests,
           instance.address,
           web3.currentProvider,
-          accounts[0]
+          accounts[0],
+          Request,
+          Response,
+          User,
+          Condition
       );
     }).then(() => done());
   });
@@ -54,6 +59,36 @@ contract('DID', function(accounts) {
     });
   });
   */
+
+  let user1_id = '1111';
+  let user1_namespace = 'cid';
+  let user1_owner = accounts[0];
+
+  let user2_id = '2222';
+  let user2_namespace = 'cid';
+  let user2_owner = accounts[0];
+
+  it('should create a user', async () => {
+
+    // Before create user
+    assert.equal((await did.getUserCount()).toString(), 0, 'User count should be 0');
+
+    // Create user 1
+    let user1_Address_1 = await did.createUser(user1_owner, user1_namespace, user1_id);
+    assert.equal((await did.getUserCount()).toString(), 1, 'User count should be 1');
+
+    // Create exist user ==> should got same Contract address
+    let user1_Address_2 = await did.createUser(user1_owner, user1_namespace, user1_id);
+    assert.equal(user1_Address_1, user1_Address_2, 'Should same User contract address');
+
+    // Check user count again
+    assert.equal((await did.getUserCount()).toString(), 1, 'User count should be 1');
+
+    // Create user 2 ==> user count should be 2
+    let user2_Address = await did.createUser(user2_owner, user2_namespace, user2_id);
+    assert.notEqual(user2_Address, '', 'Contract address should not empty');
+    assert.equal((await did.getUserCount()).toString(), 2, 'User count should be 2');
+  });
 
   let request;
   let requestContractInstance;

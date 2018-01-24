@@ -1,5 +1,3 @@
-/* global web3:true */
-
 const Web3 = require('web3');
 
 export default class {
@@ -166,7 +164,7 @@ export default class {
     event.watch(callback);
   }
 
-  watchAuthenticationEvent(requestId,callback) {
+  watchAuthenticationEvent(requestId, callback) {
     var event = this.request.at(requestId).LogConditionComplete();
     event.watch(callback);
   }
@@ -182,16 +180,17 @@ export default class {
         let tmpResponse = this.response.at(responseContract);
         //TODO check match userAddress
         if(!(await tmpResponse.didIRespond())) {
-          pendingList.push({
-            requestID: requestContract,
-            userAddress: await tmpRequest.userAddress(),
-            rpAddress: await tmpRequest.rpAddress(),
-            requestText: await tmpRequest.requestText()
-          });
+          if(await tmpRequest.userAddress() == userAddress) {
+            pendingList.push({
+              requestID: requestContract,
+              userAddress: await tmpRequest.userAddress(),
+              rpAddress: await tmpRequest.rpAddress(),
+              requestText: await tmpRequest.requestText()
+            });
+          }
         }
       }
-      let result = pendingList.filter(request => request.userAddress === userAddress);
-      return [null,result];
+      return [null,pendingList];
     }
     catch(error) { 
       console.error('Cannot get pending',error);

@@ -1,3 +1,6 @@
+/* global assert:true, artifacts:true, contract:true */
+/* eslint-env mocha */
+
 var Requests = artifacts.require('Requests');
 var User = artifacts.require('User');
 var Condition = artifacts.require('Condition');
