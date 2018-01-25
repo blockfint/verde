@@ -74,6 +74,13 @@ busInterface.event.on('success', function(event) {
   }
 });
 
+// TO BE REVISED
+busInterface.event.on('deny', function(event) {
+  if (socket) {
+    socket.emit('deny', { requestId: event.requestId });
+  }
+});
+
 busInterface.event.on('error', function(event) {
   if (socket) {
     socket.emit('fail', { requestId: event.requestId });

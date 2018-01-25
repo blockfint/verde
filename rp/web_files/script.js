@@ -82,6 +82,16 @@ socket.on('success', (data) => {
   }
 });
 
+// TO BE REVISED
+socket.on('deny', (data) => {
+  if (data.requestId === requestId) {
+    statusElement.textContent = 'Verification Failed!';
+    circleLoader.classList.add('load-error');
+    loaderCheckmark.classList.add('error');
+    loaderCheckmark.style = 'display:block;';
+  }
+});
+
 socket.on('fail', (data) => {
   if (data.requestId === requestId) {
     statusElement.textContent = 'Verification Failed!';
