@@ -2,6 +2,8 @@
 
 set -e
 
+trap "kill 0" EXIT
+
 tmpFile="/tmp/nationalId_demo.log"
 echo "Log file for ganache is located at $tmpFile"
 echo 'Starting...'
@@ -16,7 +18,7 @@ tmpArr=($(cat $tmpFile | sed '6q;d'))
 RP_ADDR=${tmpArr[1]}
 
 cd $(dirname "${BASH_SOURCE[0]}")/blockchain
-rm ./build/contracts/*.json
+rm -f ./build/contracts/*.json
 MIGRATE=$(truffle migrate)
 
 TMP=($(echo "$MIGRATE" | grep "Requests:"))
@@ -46,3 +48,5 @@ echo 'Started'
 echo 'log file for IDP and RP is located at /tmp/idp.log and /tmp/rp.log'
 echo 'Please open web browser at http://localhost:8080 for RP'
 echo 'Please open web browser at http://localhost:8181 for IDP'
+
+wait
