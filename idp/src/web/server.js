@@ -47,6 +47,11 @@ app.post('/deny/', function(req,res) {
   res.send('Success\n');
 });
 
+app.post('/createUser/', function(req,res) {
+  let result = await GreenBoxAPI.createUser(req.body.id);
+  res.send(result);
+});
+
 const server = http.createServer(app);
 server.listen(WEB_SERVER_PORT);
 

@@ -47,14 +47,19 @@ export function listen(handleRequest) {
   });
 }
 
+export function createUser(id,namespace = 'cid') {
+  return idpInterface.createUser(namespace,id);
+}
+
 const busInterface = {
   approve,
   deny,
   listen,
-  getPendingList
+  getPendingList,
+  createUser
 };
 
 export default busInterface; 
 
 //HARD CODED USER
-idpInterface.createUser('cid','1100023145268');
+createUser('1100023145268');
