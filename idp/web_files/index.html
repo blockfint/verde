@@ -6,24 +6,46 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/style.css">
   </head>
   <body>
-    <h1>IDP-1</h1>
+    <nav class="navbar navbar-light bg-light">
+      <span class="navbar-brand mb-0 h1">IDP-1</span>
+    </nav>
 
-    <div id='list'>
-      <p>Pending</p>
-      <!-- <button id="approveButton">Approve</button> -->
+    <div class="container">
+
+      <div class="card list-card">
+        <div class="card-header">
+          Pending
+        </div>
+        <ul id="pendingList" class="list-group list-group-flush">
+        </ul>
+        <div class="loading-indicator">Loading...</div>
+      </div>
+
+      <div class="card list-card">
+        <div class="card-header">
+          Approved
+        </div>
+        <ul id="approved" class="list-group list-group-flush">
+        </ul>
+        <div class="loading-indicator">Loading...</div>
+      </div>
+
+      <div class="card list-card">
+        <div class="card-header">
+          Denied
+        </div>
+        <ul id="denied" class="list-group list-group-flush">
+        </ul>
+        <div class="loading-indicator">Loading...</div>
+      </div>
+
     </div>
 
-    <div id='approved'>
-      <p>Approved</p>
-    </div>
-
-    <div id='denied'>
-      <p>Denied</p>
-    </div>
-
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
     <script src="/index.js"></script>
   </body>
 </html>

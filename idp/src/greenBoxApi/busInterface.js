@@ -16,21 +16,24 @@ export function deny(data) {
   });
 }
 
-export async function getPendingList(userId) {
+export async function getRequestList(userId) {
 
-  let [error, pendingList] = await idpInterface.getPendingRequests(userId);
+  let [error, requestList] = await idpInterface.getRequests(userId);
   if(error) throw error;
-  for(var i in pendingList) {
-    let { userAddress, requestID, rpAddress, requestText } = pendingList[i];
-    //rename key
-    pendingList[i] = {
-      userAddress: userAddress,
-      requestId: requestID,
-      rpAddress: rpAddress,
-      data: requestText
+  for(var key in requestList) {
+    let list = requestList[key];
+    for(var i in list) {
+      let { userAddress, requestID, rpAddress, requestText } = list[i];
+      //rename key
+      list[i] = {
+        userAddress: userAddress,
+        requestId: requestID,
+        rpAddress: rpAddress,
+        data: requestText
+      }
     }
   }
-  return pendingList;
+  return requestList;
 
 }
 
@@ -55,7 +58,7 @@ const busInterface = {
   approve,
   deny,
   listen,
-  getPendingList,
+  getRequestList,
   createUser
 };
 

@@ -27,9 +27,9 @@ app.get('/home/:userId', (req, res) => {
   res.sendFile(path.join(__dirname, '../../web_files/index.html'));
 });
 
-app.get('/getPendingList/:userId',async function(req,res) {
+app.get('/getRequestList/:userId',async function(req,res) {
   try {
-    res.send(await GreenBoxAPI.getPendingList(req.params.userId));
+    res.send(await GreenBoxAPI.getRequestList(req.params.userId));
   }
   catch(error) {
     console.error(error);
@@ -47,7 +47,7 @@ app.post('/deny/', function(req,res) {
   res.send('Success\n');
 });
 
-app.post('/createUser/', function(req,res) {
+app.post('/createUser/', async function(req,res) {
   let result = await GreenBoxAPI.createUser(req.body.id);
   res.send(result);
 });

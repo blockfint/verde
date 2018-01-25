@@ -75,9 +75,19 @@ function sendVerifyRequest(hideSourceRp = false) {
 
 socket.on('success', (data) => {
   if (data.requestId === requestId) {
-    statusElement.textContent = 'Verification Success!';
+    statusElement.textContent = 'Verification Successful!';
     circleLoader.classList.add('load-complete');
     loaderCheckmark.classList.add('draw');
+    loaderCheckmark.style = 'display:block;';
+  }
+});
+
+// TO BE REVISED
+socket.on('deny', (data) => {
+  if (data.requestId === requestId) {
+    statusElement.textContent = 'Verification Failed!';
+    circleLoader.classList.add('load-error');
+    loaderCheckmark.classList.add('error');
     loaderCheckmark.style = 'display:block;';
   }
 });
