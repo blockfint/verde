@@ -7,8 +7,8 @@ var User = artifacts.require('User');
 contract('UserDirectory', function(accounts) {
   let userDir;
 
-  before('set up user directory', (done) => {
-    UserDirectory.new().then((instance) => {
+  before('set up user directory', done => {
+    UserDirectory.new().then(instance => {
       userDir = instance;
       done();
     });
@@ -25,17 +25,23 @@ contract('UserDirectory', function(accounts) {
   it('should have all getters with correct value', async () => {
     // create new user1
     await userDir.newUser(user1_owner, user1_namespace, user1_id);
-    var user1_cadd = await userDir.findUserByNamespaceAndId(user1_namespace
-      , user1_id);
+    var user1_cadd = await userDir.findUserByNamespaceAndId(
+      user1_namespace,
+      user1_id
+    );
 
     // create new user2
     await userDir.newUser(user2_owner, user2_namespace, user2_id);
-    var user2_cadd = await userDir.findUserByNamespaceAndId(user2_namespace
-      , user2_id);
+    var user2_cadd = await userDir.findUserByNamespaceAndId(
+      user2_namespace,
+      user2_id
+    );
 
     // test wrong user ID
-    var wrong_ContractAddr = await userDir.findUserByNamespaceAndId('aaaa'
-      , '3333');
+    var wrong_ContractAddr = await userDir.findUserByNamespaceAndId(
+      'aaaa',
+      '3333'
+    );
     assert.equal(web3.toDecimal(wrong_ContractAddr), 0, 'Should be get 0.');
 
     // Should have correct value
@@ -49,10 +55,11 @@ contract('UserDirectory', function(accounts) {
     assert.equal(user2_namespace, await new_user2.namespace(), 'namespace');
     assert.equal(user2_owner, await new_user2.owner(), 'owner');
 
-    // check get user count 
-    assert.equal(2, new web3.BigNumber(await userDir.userCount()).toString()
-      , 'User count');
-
+    // check get user count
+    assert.equal(
+      2,
+      new web3.BigNumber(await userDir.userCount()).toString(),
+      'User count'
+    );
   });
-
 });

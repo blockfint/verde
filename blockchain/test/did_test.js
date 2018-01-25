@@ -13,29 +13,33 @@ contract('DID', function(accounts) {
   let did;
   let userDirectoryAddress;
 
-  before('deploy user directory', (done) => {
-    UserDirectory.deployed().then((instance) => {
-      userDirectoryAddress = instance.address;
-    }).then(() => done());
+  before('deploy user directory', done => {
+    UserDirectory.deployed()
+      .then(instance => {
+        userDirectoryAddress = instance.address;
+      })
+      .then(() => done());
   });
 
-  before('set up requests', (done) => {
-    Requests.deployed().then((instance) => {
-      did = new Did (
-        Requests,
-        instance.address,
-        web3.currentProvider,
-        accounts[0],
-        {
-          Request,
-          Response,
-          User,
-          Condition,
-          UserDirectory,
-          directoryAddress: userDirectoryAddress
-        }
-      );
-    }).then(() => done());
+  before('set up requests', done => {
+    Requests.deployed()
+      .then(instance => {
+        did = new Did(
+          Requests,
+          instance.address,
+          web3.currentProvider,
+          accounts[0],
+          {
+            Request,
+            Response,
+            User,
+            Condition,
+            UserDirectory,
+            directoryAddress: userDirectoryAddress
+          }
+        );
+      })
+      .then(() => done());
   });
 
   /*
@@ -68,39 +72,61 @@ contract('DID', function(accounts) {
   let user2_owner = accounts[0];
 
   it('should create a user', async () => {
-
     // Before create user
-    assert.equal((await did.getUserCount()).toString(), 0
-      , 'User count should be 0');
+    assert.equal(
+      (await did.getUserCount()).toString(),
+      0,
+      'User count should be 0'
+    );
 
     // Create user 1
-    let user1_Address_1 = await did.createUser(user1_owner
-      , user1_namespace, user1_id);
-    assert.equal((await did.getUserCount()).toString(), 1
-      , 'User count should be 1');
+    let user1_Address_1 = await did.createUser(
+      user1_owner,
+      user1_namespace,
+      user1_id
+    );
+    assert.equal(
+      (await did.getUserCount()).toString(),
+      1,
+      'User count should be 1'
+    );
 
     // Create exist user ==> should got same Contract address
-    let user1_Address_2 = await did.createUser(user1_owner
-      , user1_namespace, user1_id);
-    assert.equal(user1_Address_1, user1_Address_2
-      , 'Should same User contract address');
+    let user1_Address_2 = await did.createUser(
+      user1_owner,
+      user1_namespace,
+      user1_id
+    );
+    assert.equal(
+      user1_Address_1,
+      user1_Address_2,
+      'Should same User contract address'
+    );
 
     // Check user count again
-    assert.equal((await did.getUserCount()).toString(), 1
-      , 'User count should be 1');
+    assert.equal(
+      (await did.getUserCount()).toString(),
+      1,
+      'User count should be 1'
+    );
 
     // Create user 2 ==> user count should be 2
-    let user2_Address = await did.createUser(user2_owner
-      , user2_namespace, user2_id);
+    let user2_Address = await did.createUser(
+      user2_owner,
+      user2_namespace,
+      user2_id
+    );
     assert.notEqual(user2_Address, '', 'Contract address should not empty');
-    assert.equal((await did.getUserCount()).toString(), 2
-      , 'User count should be 2');
+    assert.equal(
+      (await did.getUserCount()).toString(),
+      2,
+      'User count should be 2'
+    );
   });
 
   let request;
   let requestContractInstance;
   it('should create a request', async () => {
-
     /*
     let user = await User.new();
     let ownerAddress = accounts[2];
@@ -117,24 +143,25 @@ contract('DID', function(accounts) {
     var rtext = 'Release credit record';
 
     request = await did.createRequest(user.address, rtext, 1);
-    console.log('request ID ' + request + ', type: ' + typeof(request));
+    console.log('request ID ' + request + ', type: ' + typeof request);
 
     let requestCount2 = await did.getRequestCount();
-    console.log('rcount1 ' + requestCount1 + ', type: ' 
-      + typeof(requestCount1));
-    console.log('rcount2 ' + requestCount2 + ', type: ' 
-      + typeof(requestCount2));
+    console.log('rcount1 ' + requestCount1 + ', type: ' + typeof requestCount1);
+    console.log('rcount2 ' + requestCount2 + ', type: ' + typeof requestCount2);
     console.log('requestCount diff:' + parseInt(requestCount2 - requestCount1));
     assert.equal(1, requestCount2 - requestCount1, 'Count');
 
     requestContractInstance = Request.at(request);
     assert.equal(1, requestCount2 - requestCount1, 'Count');
-    assert.equal(await requestContractInstance.requestText(), rtext, 
-                'request text');
+    assert.equal(
+      await requestContractInstance.requestText(),
+      rtext,
+      'request text'
+    );
   });
 
   it('should response to the request', async () => {
-    // use did 
+    // use did
     console.log('About to add IDP Response');
     // Here we get an error because request is a string but the smart contract
     // treat is as object
