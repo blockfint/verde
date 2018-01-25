@@ -27,8 +27,9 @@ contract Response {
     }
   }
 
-  function didIRespond() public view returns (bool) {
-    return responseStructs[msg.sender].isAnswered;
+  function didIRespond() public view returns (bool, uint) {
+    return (responseStructs[msg.sender].isAnswered,
+          responseStructs[msg.sender].code);
   }
 
   function getResponseCount() public view returns(uint count) {

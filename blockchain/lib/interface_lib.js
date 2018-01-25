@@ -83,9 +83,9 @@ function watchAuthenticationEvent(requestId, callback) {
   });
 }
 
-async function getPendingRequests(userId) {
+async function getRequests(userId) {
   let userAddress = await findUserAddress('cid', userId);
-  return idpContract.getPendingRequests(userAddress);
+  return idpContract.getRequests(userAddress);
 }
 
 function createUser(namespace, id) {
@@ -101,7 +101,7 @@ export const ethereumInterface = {
   watchRequestEvent,
   watchIDPResponseEvent,
   watchAuthenticationEvent,
-  getPendingRequests,
+  getRequests,
   addIdpResponse,
   createUser,
   findUserAddress
@@ -116,7 +116,7 @@ export const rpInterface = {
 
 export const idpInterface = {
   watchRequestEvent,
-  getPendingRequests,
+  getRequests,
   addIdpResponse,
   createUser,
   findUserAddress

@@ -7,7 +7,7 @@ window.addEventListener('load', () => {
   var userId = window.location.href.split('/');
   userId = userId[userId.length-1];
   if(!userId) window.location = '/home/1100023145268';
-  fetch('/getPendingList/' + userId).then((response) => {
+  fetch('/getRequestList/' + userId).then((response) => {
     return response.json();
   }).then((json) => {
     console.log(json);
@@ -24,22 +24,29 @@ function hideLoadingIndicators() {
   });
 }
 
-function updateRequestList(json) {
-  if (Array.isArray(json)) {
-    if (json.length > 0) {
-      json.forEach(function(requestObject) {
-      const listItem = createListItem(requestObject);
+function updateRequestList(jsonRequests) {
+  for(var type in jsonRequests) {
+    let json = jsonRequests[type]; 
+    if (Array.isArray(json)) {
+      if (json.length > 0) {
+        json.forEach(function(requestObject) {
+          if(type !== 'pending') {
+            requestObject.processed = true;
+            requestObject.approved = (type === 'approved');
+          }
+          const listItem = createListItem(requestObject);
 
-      if (!requestObject.processed) {
-        pendingList.appendChild(listItem);
-      } else {
-        if (requestObject.approved) {
-          approvedList.appendChild(listItem);
-        } else {
-          deniedList.appendChild(listItem);
-        }
+          if (!requestObject.processed) {
+            pendingList.appendChild(listItem);
+          } else {
+            if (requestObject.approved) {
+              approvedList.appendChild(listItem);
+            } else {
+              deniedList.appendChild(listItem);
+            }
+          }
+        });
       }
-    });
     }
   }
 

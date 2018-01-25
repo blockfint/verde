@@ -189,31 +189,41 @@ export default class {
     event.watch(callback);
   }
 
-  async getPendingRequests(userAddress) {
+  async getRequests(userAddress) {
     try {
       let count = await this.requests.getRequestCount();
-      let pendingList = [];
-      for (let i = 0; i < count; i++) {
+      let pendingList = [], approvedList = [], deniedList = [];
+      for(let i = 0 ; i < count ; i++) {
         let requestContract = await this.requests.getRequest(i);
         let tmpRequest = this.request.at(requestContract);
         let responseContract = await tmpRequest.getIdpResponse();
         let tmpResponse = this.response.at(responseContract);
-        //TODO check match userAddress
-        if (!await tmpResponse.didIRespond()) {
-          if ((await tmpRequest.userAddress()) == userAddress) {
-            pendingList.push({
-              requestID: requestContract,
-              userAddress: await tmpRequest.userAddress(),
-              rpAddress: await tmpRequest.rpAddress(),
-              requestText: await tmpRequest.requestText()
-            });
+        if(await tmpRequest.userAddress() == userAddress) {
+          let targetRequest = {
+            requestID: requestContract,
+            userAddress: await tmpRequest.userAddress(),
+            rpAddress: await tmpRequest.rpAddress(),
+            requestText: await tmpRequest.requestText()
+          }
+          let [isAnswered,myRespond] = await tmpResponse.didIRespond();
+          if(isAnswered) {
+            if(parseInt(Number(myRespond)) === 0) approvedList.push(targetRequest);
+            else deniedList.push(targetRequest);
+          }
+          else {
+            pendingList.push(targetRequest);
           }
         }
       }
-      return [null, pendingList];
-    } catch (error) {
-      console.error('Cannot get pending', error);
-      return [error, null];
+      return [null,{
+        pending: pendingList,
+        approved: approvedList,
+        denied: deniedList
+      }];
+    }
+    catch(error) { 
+      console.error('Cannot get pending',error);
+      return [error,null];
     }
   }
 }
