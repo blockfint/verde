@@ -8,8 +8,8 @@ contract('User', function(accounts) {
   let user;
   let condition;
 
-  before('set up user', (done) => {
-    User.new().then((instance) => {
+  before('set up user', done => {
+    User.new().then(instance => {
       user = instance;
       console.log('user instance:' + user);
       done();
@@ -38,5 +38,4 @@ contract('User', function(accounts) {
     // caddr.at()
     // use user object directly. The responder would be accounts[1].
   });
-
 });
