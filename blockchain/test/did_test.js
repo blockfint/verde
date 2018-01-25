@@ -70,23 +70,31 @@ contract('DID', function(accounts) {
   it('should create a user', async () => {
 
     // Before create user
-    assert.equal((await did.getUserCount()).toString(), 0, 'User count should be 0');
+    assert.equal((await did.getUserCount()).toString(), 0
+      , 'User count should be 0');
 
     // Create user 1
-    let user1_Address_1 = await did.createUser(user1_owner, user1_namespace, user1_id);
-    assert.equal((await did.getUserCount()).toString(), 1, 'User count should be 1');
+    let user1_Address_1 = await did.createUser(user1_owner
+      , user1_namespace, user1_id);
+    assert.equal((await did.getUserCount()).toString(), 1
+      , 'User count should be 1');
 
     // Create exist user ==> should got same Contract address
-    let user1_Address_2 = await did.createUser(user1_owner, user1_namespace, user1_id);
-    assert.equal(user1_Address_1, user1_Address_2, 'Should same User contract address');
+    let user1_Address_2 = await did.createUser(user1_owner
+      , user1_namespace, user1_id);
+    assert.equal(user1_Address_1, user1_Address_2
+      , 'Should same User contract address');
 
     // Check user count again
-    assert.equal((await did.getUserCount()).toString(), 1, 'User count should be 1');
+    assert.equal((await did.getUserCount()).toString(), 1
+      , 'User count should be 1');
 
     // Create user 2 ==> user count should be 2
-    let user2_Address = await did.createUser(user2_owner, user2_namespace, user2_id);
+    let user2_Address = await did.createUser(user2_owner
+      , user2_namespace, user2_id);
     assert.notEqual(user2_Address, '', 'Contract address should not empty');
-    assert.equal((await did.getUserCount()).toString(), 2, 'User count should be 2');
+    assert.equal((await did.getUserCount()).toString(), 2
+      , 'User count should be 2');
   });
 
   let request;
@@ -112,8 +120,10 @@ contract('DID', function(accounts) {
     console.log('request ID ' + request + ', type: ' + typeof(request));
 
     let requestCount2 = await did.getRequestCount();
-    console.log('rcount1 ' + requestCount1 + ', type: ' + typeof(requestCount1));
-    console.log('rcount2 ' + requestCount2 + ', type: ' + typeof(requestCount2));
+    console.log('rcount1 ' + requestCount1 + ', type: ' 
+      + typeof(requestCount1));
+    console.log('rcount2 ' + requestCount2 + ', type: ' 
+      + typeof(requestCount2));
     console.log('requestCount diff:' + parseInt(requestCount2 - requestCount1));
     assert.equal(1, requestCount2 - requestCount1, 'Count');
 

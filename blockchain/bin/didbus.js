@@ -141,7 +141,8 @@ if (command === 'request') {
   did.createUser(rp, NAMESPACE, id) 
     .then((userAddress) => {
       did.createRequest(userAddress, REQUEST_STRING, IDP_COUNT) 
-        .then((result) => console.log('Created request for ' + id + ' at ' + result));
+        .then((result) => console.log('Created request for ' + id + ' at ' 
+          + result));
     });
 }
 

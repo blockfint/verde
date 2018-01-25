@@ -1,7 +1,8 @@
 const Web3 = require('web3');
 
 export default class {
-  constructor (Requests = false, requestsAddress, provider, fromAddress, addtionalArgs) {
+  constructor (Requests = false, requestsAddress, provider
+              , fromAddress, addtionalArgs) {
     this.web3 = new Web3(provider);
     this.fromAddress = fromAddress;
     this.provider = provider;
@@ -17,7 +18,8 @@ export default class {
       this.requests = Requests.at(requestsAddress);
     }
 
-    let { Request, Response, User, Condition, UserDirectory, directoryAddress } = addtionalArgs;
+    let { Request, Response, User, Condition
+      , UserDirectory, directoryAddress } = addtionalArgs;
 
     if(Request) {
       Request.setProvider(provider);
