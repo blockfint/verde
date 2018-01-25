@@ -1,4 +1,4 @@
-import web3 from 'web3';
+// import web3 from 'web3';
 import ethereum from '../index';
 
 const RPC_HOST = 'localhost';
@@ -8,22 +8,22 @@ const DIRECTORY_CONTRACT_ADDR = process.env.DIRECTORY_CONTRACT_ADDR;
 const IDP_ADDR = process.env.IDP_ADDR;
 const RP_ADDR = process.env.RP_ADDR;
 
-var idpContract, rpContract, directoryContract, userAddress;
+var idpContract, rpContract, directoryContract;
 
-if(!IDP_ADDR && !RP_ADDR) {
-  throw('Must specify RP_ADDR or IDP_ADDR');
+if (!IDP_ADDR && !RP_ADDR) {
+  throw 'Must specify RP_ADDR or IDP_ADDR';
 }
 
 //contract instance
-if(IDP_ADDR)
+if (IDP_ADDR)
   idpContract = ethereum(RPC_HOST, RPC_PORT, REQUESTS_CONTRACT_ADDR, IDP_ADDR);
 
-if(RP_ADDR)
+if (RP_ADDR)
   rpContract = ethereum(RPC_HOST, RPC_PORT, REQUESTS_CONTRACT_ADDR, RP_ADDR);
 
-if(DIRECTORY_CONTRACT_ADDR) {
-  directoryContract = ethereum(RPC_HOST, RPC_PORT, false, IDP_ADDR, { 
-    directoryAddress: DIRECTORY_CONTRACT_ADDR
+if (DIRECTORY_CONTRACT_ADDR) {
+  directoryContract = ethereum(RPC_HOST, RPC_PORT, false, IDP_ADDR, {
+    directoryAddress: DIRECTORY_CONTRACT_ADDR,
   });
 }
 
@@ -40,7 +40,7 @@ if(DIRECTORY_CONTRACT_ADDR) {
 
 function createRequest({ userAddress, requestText }) {
   //should return request id
-  return rpContract.createRequest(userAddress,requestText,0);
+  return rpContract.createRequest(userAddress, requestText, 0);
 }
 
 function addIdpResponse({ requestId, code }) {
@@ -61,25 +61,25 @@ function addIdpResponse({ requestId, code }) {
 
 function watchRequestEvent(callback) {
   idpContract.watchRequestEvent(function(error, eventObject) {
-    if(error) return callback(error);
+    if (error) return callback(error);
     //filter only for those event concern IDP_ADDR
-    callback(null, eventObject.args)
+    callback(null, eventObject.args);
   });
 }
 
 function watchIDPResponseEvent(callback) {
   rpContract.watchIdpResponse(function(error, eventObject) {
-    if(error) return callback(error);
+    if (error) return callback(error);
     //filter only for those event concern RP_ADDR
-    callback(null, eventObject.args)
+    callback(null, eventObject.args);
   });
 }
 
 function watchAuthenticationEvent(requestId, callback) {
-  rpContract.watchAuthenticationEvent(requestId,function(error, eventObject) {
-    if(error) return callback(error);
+  rpContract.watchAuthenticationEvent(requestId, function(error, eventObject) {
+    if (error) return callback(error);
     //filter only for those event concern RP_ADDR
-    callback(null, eventObject.args)
+    callback(null, eventObject.args);
   });
 }
 
@@ -104,14 +104,14 @@ export const ethereumInterface = {
   getPendingRequests,
   addIdpResponse,
   createUser,
-  findUserAddress 
+  findUserAddress,
 };
 
 export const rpInterface = {
   createRequest,
   watchIDPResponseEvent,
   watchAuthenticationEvent,
-  findUserAddress
+  findUserAddress,
 };
 
 export const idpInterface = {
@@ -119,7 +119,7 @@ export const idpInterface = {
   getPendingRequests,
   addIdpResponse,
   createUser,
-  findUserAddress
-}
+  findUserAddress,
+};
 
 export default ethereumInterface;

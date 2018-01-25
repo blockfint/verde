@@ -155,16 +155,19 @@ export default class {
   *       console.error(error);
   */
   watchRequestEvent(callback) {
+    // eslint-disable-next-line babel/new-cap
     var event = this.requests.LogRequest();
     event.watch(callback);
   }
 
   watchIdpResponse(callback) {
+    // eslint-disable-next-line babel/new-cap
     var event = this.requests.IdpResponse();
     event.watch(callback);
   }
 
   watchAuthenticationEvent(requestId, callback) {
+    // eslint-disable-next-line babel/new-cap
     var event = this.request.at(requestId).LogConditionComplete();
     event.watch(callback);
   }
