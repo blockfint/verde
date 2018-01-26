@@ -192,38 +192,42 @@ export default class {
   async getRequests(userAddress) {
     try {
       let count = await this.requests.getRequestCount();
-      let pendingList = [], approvedList = [], deniedList = [];
-      for(let i = 0 ; i < count ; i++) {
+      let pendingList = [],
+        approvedList = [],
+        deniedList = [];
+      for (let i = 0; i < count; i++) {
         let requestContract = await this.requests.getRequest(i);
         let tmpRequest = this.request.at(requestContract);
         let responseContract = await tmpRequest.getIdpResponse();
         let tmpResponse = this.response.at(responseContract);
-        if(await tmpRequest.userAddress() == userAddress) {
+        if ((await tmpRequest.userAddress()) == userAddress) {
           let targetRequest = {
             requestID: requestContract,
             userAddress: await tmpRequest.userAddress(),
             rpAddress: await tmpRequest.rpAddress(),
             requestText: await tmpRequest.requestText()
-          }
-          let [isAnswered,myRespond] = await tmpResponse.didIRespond();
-          if(isAnswered) {
-            if(parseInt(Number(myRespond)) === 0) approvedList.push(targetRequest);
+          };
+          let [isAnswered, myRespond] = await tmpResponse.didIRespond();
+          if (isAnswered) {
+            if (parseInt(Number(myRespond)) === 0)
+              approvedList.push(targetRequest);
             else deniedList.push(targetRequest);
-          }
-          else {
+          } else {
             pendingList.push(targetRequest);
           }
         }
       }
-      return [null,{
-        pending: pendingList,
-        approved: approvedList,
-        denied: deniedList
-      }];
-    }
-    catch(error) { 
-      console.error('Cannot get pending',error);
-      return [error,null];
+      return [
+        null,
+        {
+          pending: pendingList,
+          approved: approvedList,
+          denied: deniedList
+        }
+      ];
+    } catch (error) {
+      console.error('Cannot get pending', error);
+      return [error, null];
     }
   }
 }
