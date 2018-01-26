@@ -1,5 +1,5 @@
 import * as busInterface from './busInterface';
-import * as userDirectoryInterface from './userDirectoryInterface';
+//import * as userDirectoryInterface from './userDirectoryInterface';
 
 // Wait for all event.
 busInterface.event.on('success', function(event) {

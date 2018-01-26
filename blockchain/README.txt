@@ -1,6 +1,7 @@
 Preparation
   npm install
   npm install -g truffle
+  npm install -g ganache-cli
   truffle compile
 
 Start ganache-cli with option unlock
@@ -23,7 +24,7 @@ To create request
   -- request \
   --rp 0 \
   --user 4 \
-  --userid 22222
+  --userid 11111
 
 To get pending request
   npm run didbus \
