@@ -10,6 +10,10 @@ module.exports = {
     ],
     "parser": "babel-eslint",
     "rules": {
+         "max-len": [
+            "warn",
+            { "code": 80 }
+        ],
         "indent": [
             "off",
             2

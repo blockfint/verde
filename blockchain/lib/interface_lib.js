@@ -23,7 +23,7 @@ if (RP_ADDR)
 
 if (DIRECTORY_CONTRACT_ADDR) {
   directoryContract = ethereum(RPC_HOST, RPC_PORT, false, IDP_ADDR, {
-    directoryAddress: DIRECTORY_CONTRACT_ADDR,
+    directoryAddress: DIRECTORY_CONTRACT_ADDR
   });
 }
 
@@ -104,14 +104,14 @@ export const ethereumInterface = {
   getRequests,
   addIdpResponse,
   createUser,
-  findUserAddress,
+  findUserAddress
 };
 
 export const rpInterface = {
   createRequest,
   watchIDPResponseEvent,
   watchAuthenticationEvent,
-  findUserAddress,
+  findUserAddress
 };
 
 export const idpInterface = {
@@ -119,7 +119,7 @@ export const idpInterface = {
   getRequests,
   addIdpResponse,
   createUser,
-  findUserAddress,
+  findUserAddress
 };
 
 export default ethereumInterface;

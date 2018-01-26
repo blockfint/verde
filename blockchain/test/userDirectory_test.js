@@ -5,11 +5,11 @@ var UserDirectory = artifacts.require('UserDirectory');
 var User = artifacts.require('User');
 
 contract('UserDirectory', function(accounts) {
-  let userDirectory;
+  let userDir;
 
-  before('set up user directory', (done) => {
-    UserDirectory.new().then((instance) => {
-      userDirectory = instance;
+  before('set up user directory', done => {
+    UserDirectory.new().then(instance => {
+      userDir = instance;
       done();
     });
   });
@@ -24,31 +24,42 @@ contract('UserDirectory', function(accounts) {
 
   it('should have all getters with correct value', async () => {
     // create new user1
-    await userDirectory.newUser(user1_owner, user1_namespace, user1_id);
-    var user1_ContractAddr = await userDirectory.findUserByNamespaceAndId(user1_namespace,user1_id);
+    await userDir.newUser(user1_owner, user1_namespace, user1_id);
+    var user1_cadd = await userDir.findUserByNamespaceAndId(
+      user1_namespace,
+      user1_id
+    );
 
     // create new user2
-    await userDirectory.newUser(user2_owner, user2_namespace, user2_id);
-    var user2_ContractAddr = await userDirectory.findUserByNamespaceAndId(user2_namespace, user2_id);
+    await userDir.newUser(user2_owner, user2_namespace, user2_id);
+    var user2_cadd = await userDir.findUserByNamespaceAndId(
+      user2_namespace,
+      user2_id
+    );
 
     // test wrong user ID
-    var wrong_ContractAddr = await userDirectory.findUserByNamespaceAndId('aaaa', '3333');
+    var wrong_ContractAddr = await userDir.findUserByNamespaceAndId(
+      'aaaa',
+      '3333'
+    );
     assert.equal(web3.toDecimal(wrong_ContractAddr), 0, 'Should be get 0.');
 
     // Should have correct value
-    var new_user1 = User.at(user1_ContractAddr);
+    var new_user1 = User.at(user1_cadd);
     assert.equal(user1_id, await new_user1.id(), 'id');
     assert.equal(user1_namespace, await new_user1.namespace(), 'namespace');
     assert.equal(user1_owner, await new_user1.owner(), 'owner');
 
-    var new_user2 = User.at(user2_ContractAddr);
+    var new_user2 = User.at(user2_cadd);
     assert.equal(user2_id, await new_user2.id(), 'id');
     assert.equal(user2_namespace, await new_user2.namespace(), 'namespace');
     assert.equal(user2_owner, await new_user2.owner(), 'owner');
 
-    // check get user count 
-    assert.equal(2, new web3.BigNumber(await userDirectory.userCount()).toString(), 'User count');
-
+    // check get user count
+    assert.equal(
+      2,
+      new web3.BigNumber(await userDir.userCount()).toString(),
+      'User count'
+    );
   });
-
 });
