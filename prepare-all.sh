@@ -5,7 +5,7 @@ set -e
 NPM_CHECK=$(which npm)
 NODE_CHECK=$(which node)
 
-if [ "$NPM_CHECK" == "" || "$NODE_CHECK" == "" ]; then
+if [ "$NPM_CHECK" == "" ] || [ "$NODE_CHECK" == "" ]; then
   echo 'Please install nodejs and npm'
   exit 1
 fi
