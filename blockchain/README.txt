@@ -1,6 +1,7 @@
 Preparation
   npm install
   npm install -g truffle
+  npm install -g ganache-cli
   truffle compile
 
 Start ganache-cli with option unlock
