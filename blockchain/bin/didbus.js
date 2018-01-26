@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { default as yargs } from 'yargs';
 import { default as initializeLib } from '../index';
+import { default as Web3 } from 'web3';
 
 const RPC_HOST = 'localhost';
 const RPC_PORT = '8545';
@@ -21,6 +22,18 @@ fs.readFile(addresssFilePath, 'utf8', function(err, data) {
 });
 
 function startDIDBus() {
+  let provider = new Web3.providers.HttpProvider(
+    `http:\/\/${RPC_HOST}:${RPC_PORT}`
+  );
+  let web3 = new Web3(provider);
+
+  let REQUESTS_CONTRACT_ADDR = addressObj.Requests;
+  let DIRECTORY_CONTRACT_ADDR = addressObj.UserDirectory;
+  let accounts = web3.eth.accounts;
+  // console.log(accounts[0]);
+  // let IDP_ADDR = web3.eth.accounts[0];
+  // let RP_ADDR = web3.eth.accounts[1];
+
   var args = yargs
     .command('request', 'Create a request', yargs => {
       return yargs
@@ -37,22 +50,26 @@ function startDIDBus() {
         .option('ra', {
           description: 'The requests contract address',
           type: 'string',
-          default: addressObj.Requests
+          default: REQUESTS_CONTRACT_ADDR
         })
         .option('uda', {
           description: 'The user directory contract address',
           type: 'string',
-          default: addressObj.UserDirectory
+          default: DIRECTORY_CONTRACT_ADDR
         })
         .option('rp', {
-          description: 'The RP account address to create request',
+          description: 'The RP account index to create request',
           type: 'string'
         })
-        .option('id', {
-          description: 'The user ID you want to request for authentication',
+        .option('user', {
+          description: 'The account index to create request',
           type: 'string'
         })
-        .demand(['rp', 'id']);
+        .option('userid', {
+          description: 'The citizen ID',
+          type: 'string'
+        })
+        .demand(['rp', 'user', 'userid']);
     })
     .command('response', 'Response to the request', yargs => {
       return yargs
@@ -67,7 +84,7 @@ function startDIDBus() {
           default: RPC_PORT
         })
         .option('rid', {
-          description: 'The request contract address',
+          description: 'The request index',
           type: 'string'
         })
         .option('ra', {
@@ -75,11 +92,24 @@ function startDIDBus() {
           type: 'string',
           default: addressObj.Requests
         })
+        .option('uda', {
+          description: 'The user directory contract address',
+          type: 'string',
+          default: addressObj.UserDirectory
+        })
         .option('idp', {
-          description: 'The IDP account address to response to the request',
+          description: 'The IDP account index to response request',
           type: 'string'
         })
-        .demand(['rid', 'idp']);
+        .option('user', {
+          description: 'The account index to response request',
+          type: 'string'
+        })
+        .option('userid', {
+          description: 'The citizen ID',
+          type: 'string'
+        })
+        .demand(['rid', 'idp', 'user', 'userid']);
     })
     .command('pendingRequest', 'Get pending request', yargs => {
       return yargs
@@ -103,15 +133,19 @@ function startDIDBus() {
           type: 'string',
           default: addressObj.UserDirectory
         })
-        .option('rp', {
-          description: 'The RP account address',
+        .option('idp', {
+          description: 'The IDP account index',
           type: 'string'
         })
-        .option('id', {
-          description: 'The user ID you want to request for authentication',
+        .option('user', {
+          description: 'The account index',
           type: 'string'
         })
-        .demand(['rp', 'id']);
+        .option('userid', {
+          description: 'The citizen ID',
+          type: 'string'
+        })
+        .demand(['idp', 'user', 'userid']);
     })
     .command('createUser', 'Create a user', yargs => {
       return yargs
@@ -136,14 +170,18 @@ function startDIDBus() {
           default: addressObj.UserDirectory
         })
         .option('rp', {
-          description: 'The RP account address to create user',
+          description: 'The RP account index to create user',
           type: 'string'
         })
-        .option('id', {
+        .option('user', {
+          description: 'The account index to create user',
+          type: 'string'
+        })
+        .option('userid', {
           description: 'The citizen ID',
           type: 'string'
         })
-        .demand(['rp', 'id']);
+        .demand(['rp', 'user', 'userid']);
     })
     .help()
     .usage('Usage: $0 [command] [options]');
@@ -156,51 +194,72 @@ function startDIDBus() {
 
   let command = argv._[0];
 
-  if (command === 'request') {
-    // console.log('CREATE ARGV' + JSON.stringify(argv));
-    let { id, host, port, rp, ra, uda } = argv;
-    let did = initializeLib(host, port, ra, rp, {
+  if (command === 'createUser') {
+    // console.log('CREATE USER ARGV' + JSON.stringify(argv));
+    let { host, port, ra, uda, rp, user, userid } = argv;
+    let rpAccount = accounts[rp];
+    let userAccount = accounts[user];
+    let did = initializeLib(host, port, ra, rpAccount, {
       directoryAddress: uda
     });
-    did.createUser(rp, NAMESPACE, id).then(userAddress => {
+    did
+      .createUser(userAccount, NAMESPACE, userid)
+      .then(result =>
+        console.log('Created user id ' + userid + ' at ' + result)
+      );
+  }
+
+  if (command === 'request') {
+    // console.log('CREATE ARGV' + JSON.stringify(argv));
+    let { host, port, ra, uda, rp, user, userid } = argv;
+    let rpAccount = accounts[rp];
+    let userAccount = accounts[user];
+    let did = initializeLib(host, port, ra, rpAccount, {
+      directoryAddress: uda
+    });
+    did.createUser(userAccount, NAMESPACE, userid).then(userAddress => {
       did
         .createRequest(userAddress, REQUEST_STRING, IDP_COUNT)
         .then(result =>
-          console.log('Created request for ' + id + ' at ' + result)
+          console.log('Created request for ' + userid + ' at ' + result)
         );
+    });
+  }
+
+  if (command === 'pendingRequest') {
+    // console.log('GET PENDING REQUEST ARGV' + JSON.stringify(argv));
+    let { host, port, ra, uda, idp, user, userid } = argv;
+    let idpAccount = accounts[idp];
+    let userAccount = accounts[user];
+    let did = initializeLib(host, port, ra, idpAccount, {
+      directoryAddress: uda
+    });
+    did.createUser(userAccount, NAMESPACE, userid).then(userAddress => {
+      did
+        .getRequests(userAddress)
+        .then(result => console.log(result[1]['pending']));
     });
   }
 
   if (command === 'response') {
     // console.log('RESPONSE ARGV' + JSON.stringify(argv));
-    let { host, port, rid, idp, ra } = argv;
-    let did = initializeLib(host, port, ra, idp);
-    did
-      .addIdpResponse(rid, 0, 'Authentication success')
-      .then(() => console.log('Response success for request ID ' + rid));
-  }
-
-  if (command === 'createUser') {
-    // console.log('CREATE USER ARGV' + JSON.stringify(argv));
-    let { host, port, rp, ra, id, uda } = argv;
-    let did = initializeLib(host, port, ra, rp, {
+    let { host, port, ra, uda, idp, user, userid, rid } = argv;
+    let idpAccount = accounts[idp];
+    let userAccount = accounts[user];
+    let did = initializeLib(host, port, ra, idpAccount, {
       directoryAddress: uda
     });
-    did
-      .createUser(rp, NAMESPACE, id)
-      .then(result => console.log('Created user id ' + id + ' at ' + result));
-  }
-
-  if (command === 'pendingRequest') {
-    // console.log('GET PENDING REQUEST ARGV' + JSON.stringify(argv));
-    let { id, host, port, rp, ra, uda } = argv;
-    let did = initializeLib(host, port, ra, rp, {
-      directoryAddress: uda
-    });
-    did.createUser(rp, NAMESPACE, id).then(userAddress => {
-      did
-        .getPendingRequests(userAddress)
-        .then(result => console.log(result[1]));
+    did.createUser(userAccount, NAMESPACE, userid).then(userAddress => {
+      did.getRequests(userAddress).then(pendingRequest => {
+        if (pendingRequest[1]['pending'][rid] != undefined) {
+          let requestAddress = pendingRequest[1]['pending'][rid].requestID;
+          did
+            .addIdpResponse(requestAddress, 0, 'Authentication success')
+            .then(() =>
+              console.log('Response success for request ID ' + requestAddress)
+            );
+        }
+      });
     });
   }
 }
