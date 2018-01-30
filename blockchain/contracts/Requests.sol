@@ -9,14 +9,13 @@ contract Requests {
 
   event LogNewRequest(address rpAddress, address requestContract, uint index);
   event LogRequest(address rpAddress, address userAddress, string requestText,
-    uint idpCount, address requestID);
+    address requestID);
 
   function createRequest(
     address _userAddress,
     // The _requestText is temporary. It will be moved to stay out of the
     // request later.
-    string _requestText,
-    uint _idpCount
+    string _requestText
     ) public returns (Request requestID) {
         
     address[] memory idpAddressList;
@@ -29,8 +28,7 @@ contract Requests {
                                asServiceAddressList);
     requestIndex = requestContracts.push(requestContract) - 1;
     // Create request event.
-    LogRequest(msg.sender, _userAddress, _requestText, _idpCount, 
-               requestContract);
+    LogRequest(msg.sender, _userAddress, _requestText, requestContract);
     // Create new request event.
     LogNewRequest(msg.sender, requestContract, requestIndex); 
     return requestContract;

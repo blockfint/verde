@@ -80,9 +80,9 @@ export default class {
   * Returns
   *   requestID : string
   */
-  createRequest(userAddress, requestText, idpCount) {
+  createRequest(userAddress, requestText) {
     return this.requests
-      .createRequest(userAddress, requestText, idpCount)
+      .createRequest(userAddress, requestText)
       .then(result => {
         for (var i in result.logs) {
           if (result.logs[i].event === 'LogRequest')
@@ -102,7 +102,7 @@ export default class {
   * Parameters
   *   ownerAddress : string
   *   namespace    : string
-  *   namespace    : string
+  *   id           : string
   * Returns
   *   userContractAddress : string
   */
