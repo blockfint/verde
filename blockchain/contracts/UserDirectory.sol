@@ -26,7 +26,7 @@ contract UserDirectory {
     public
   {
     User user = new User();
-    Condition condition = new Condition(1);
+    Condition condition = new Condition(2);
     user.newUser(_owner, _namespace, _id);
     user.setConditionContractAddress(condition);
     _users[_namespace].users[_id] = user;
