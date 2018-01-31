@@ -16,8 +16,10 @@ npm install -g truffle
 cd $(dirname "${BASH_SOURCE[0]}")/blockchain
 npm install
 
-cd $(dirname "${BASH_SOURCE[0]}")/idp
+cd ../idp
 npm install
 
-cd $(dirname "${BASH_SOURCE[0]}")/rp
+cd ../rp
 npm install
+
+echo 'All installation done'
