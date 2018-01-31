@@ -6,14 +6,14 @@ let requestId = null;
 const step1 = document.getElementById('step1');
 const step2 = document.getElementById('step2');
 
-const noSelectedIdpAlert = document.getElementById('noSelectedIdpAlert');
+//const noSelectedIdpAlert = document.getElementById('noSelectedIdpAlert');
 
 const requestIdElement = document.getElementById('requestId');
 const statusElement = document.getElementById('status');
 const circleLoader = document.getElementsByClassName('circle-loader')[0];
 const loaderCheckmark = document.getElementsByClassName('checkmark')[0];
 
-const idpsElement = document.getElementById('idps');
+//const idpsElement = document.getElementById('idps');
 
 const verifyButton = document.getElementById('verify');
 verifyButton.addEventListener('click', (event) => sendVerifyRequest());
@@ -21,7 +21,7 @@ verifyButton.addEventListener('click', (event) => sendVerifyRequest());
 const verifyHideSourceRpButton = document.getElementById('verifyHideSourceRp');
 verifyHideSourceRpButton.addEventListener('click', (event) => sendVerifyRequest(true));
 
-window.addEventListener('load', () => {
+/*window.addEventListener('load', () => {
   fetch('/idps')
     .then(response => {
       return response.json();
@@ -37,13 +37,13 @@ window.addEventListener('load', () => {
       });
       idpsElement.innerHTML = idpListItems.join('');
     });
-});
+});*/
 
 function sendVerifyRequest(hideSourceRp = false) {
   const selectedIdpElements = Array.prototype.slice.call(document.querySelectorAll('#idps input'));
   const selectedIdps = selectedIdpElements.filter(ele => ele.checked === true).map(ele => ele.dataset.id);
 
-  if (selectedIdps.length > 0) {
+  //if (selectedIdps.length > 0) {
     step1.classList.add('d-none');
     step2.classList.remove('d-none');
 
@@ -68,9 +68,9 @@ function sendVerifyRequest(hideSourceRp = false) {
         requestId = json.requestId;
         requestIdElement.textContent = 'Request ID: ' + requestId;
       });
-  } else {
+  /*} else {
     noSelectedIdpAlert.classList.remove('d-none');
-  }
+  }*/
 }
 
 socket.on('success', (data) => {

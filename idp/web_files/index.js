@@ -2,8 +2,14 @@ const pendingList = document.getElementById('pendingList');
 const approvedList = document.getElementById('approved');
 const deniedList = document.getElementById('denied');
 const loadingIndicators = document.getElementsByClassName('loading-indicator');
+const socket = io('/')
 
-window.addEventListener('load', () => {
+socket.on('fetch', (data) => {
+  fetchAndupdateRequestList();
+});
+window.addEventListener('load',fetchAndupdateRequestList);
+
+function fetchAndupdateRequestList() {
   var userId = window.location.href.split('/');
   userId = userId[userId.length-1];
   if(!userId) window.location = '/home/1100023145268';
@@ -16,7 +22,7 @@ window.addEventListener('load', () => {
   }).catch(function(error) {
     console.error(error);
   });
-});
+}
 
 function hideLoadingIndicators() {
   Array.prototype.forEach.call(loadingIndicators, (ele) => {
@@ -24,7 +30,17 @@ function hideLoadingIndicators() {
   });
 }
 
+function clearRequestList() {
+  while(pendingList.firstChild)
+    pendingList.removeChild(pendingList.firstChild);
+  while(approvedList.firstChild)
+    approvedList.removeChild(approvedList.firstChild);
+  while(deniedList.firstChild)
+    deniedList.removeChild(deniedList.firstChild);
+}
+
 function updateRequestList(jsonRequests) {
+  clearRequestList();
   for(var type in jsonRequests) {
     let json = jsonRequests[type]; 
     if (Array.isArray(json)) {
@@ -123,7 +139,8 @@ function createRequestButton(userId, requestId, action) {
       .then(response => {
         //return response;
         //return response.json();
-        window.location.reload();
+        //window.location.reload();
+        fetchAndupdateRequestList();
       })
       .then(json => {
         console.log(json);
