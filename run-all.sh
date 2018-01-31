@@ -9,6 +9,13 @@ else
   IDP_COUNT=$1
 fi
 
+if [ "$2" == "" ]; then
+  MIN_APPROVE=1
+  echo "You can pass number IDP approval needed as second argument, Default is 1"
+else
+  MIN_APPROVE=$2
+fi
+
 tmpFile="/tmp/nationalId_demo.log"
 echo 'Starting ganache ...'
 echo "Log file for ganache is located at $tmpFile"
@@ -53,7 +60,7 @@ while [ $IDP_COUNT -gt 0 ]; do
   
   #CONDITION_CONTRACT_ADDR=$CONDITION_CONTRACT_ADDR \
   #USER_CONTRACT_ADDR=$USER_CONTRACT_ADDR \
-  SERVER_PORT=$(($IDP_COUNT + 8181)) \
+  SERVER_PORT=$(($IDP_COUNT + 8181)) MIN_APPROVE=$MIN_APPROVE \
   IDP_ADDR=$IDP_ADDR REQUESTS_CONTRACT_ADDR=$REQUESTS_CONTRACT_ADDR \
   DIRECTORY_CONTRACT_ADDR=$DIRECTORY_CONTRACT_ADDR \
   bash -c "npm start > /tmp/idp_$(($1 - $IDP_COUNT)).log &"
