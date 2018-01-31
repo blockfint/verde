@@ -30,9 +30,6 @@ function startDIDBus() {
   let REQUESTS_CONTRACT_ADDR = addressObj.Requests;
   let DIRECTORY_CONTRACT_ADDR = addressObj.UserDirectory;
   let accounts = web3.eth.accounts;
-  // console.log(accounts[0]);
-  // let IDP_ADDR = web3.eth.accounts[0];
-  // let RP_ADDR = web3.eth.accounts[1];
 
   var args = yargs
     .command('request', 'Create a request', yargs => {
@@ -111,7 +108,7 @@ function startDIDBus() {
         })
         .demand(['rid', 'idp', 'user', 'userid']);
     })
-    .command('pendingRequest', 'Get pending request', yargs => {
+    .command('getRequest', 'Get request', yargs => {
       return yargs
         .option('host', {
           description: 'HTTP host of Ethereum node',
@@ -133,8 +130,8 @@ function startDIDBus() {
           type: 'string',
           default: addressObj.UserDirectory
         })
-        .option('idp', {
-          description: 'The IDP account index',
+        .option('rp', {
+          description: 'The RP account index',
           type: 'string'
         })
         .option('user', {
@@ -145,7 +142,7 @@ function startDIDBus() {
           description: 'The citizen ID',
           type: 'string'
         })
-        .demand(['idp', 'user', 'userid']);
+        .demand(['rp', 'user', 'userid']);
     })
     .command('createUser', 'Create a user', yargs => {
       return yargs
@@ -181,6 +178,10 @@ function startDIDBus() {
           description: 'The citizen ID',
           type: 'string'
         })
+        .option('idpCount', {
+          description: 'The number of minimum response OK',
+          type: 'string'
+        })
         .demand(['rp', 'user', 'userid']);
     })
     .help()
@@ -196,17 +197,16 @@ function startDIDBus() {
 
   if (command === 'createUser') {
     // console.log('CREATE USER ARGV' + JSON.stringify(argv));
-    let { host, port, ra, uda, rp, user, userid } = argv;
+    let { host, port, ra, uda, rp, user, userid, idpCount } = argv;
     let rpAccount = accounts[rp];
     let userAccount = accounts[user];
     let did = initializeLib(host, port, ra, rpAccount, {
       directoryAddress: uda
     });
-    did
-      .createUser(userAccount, NAMESPACE, userid)
-      .then(result =>
-        console.log('Created user id ' + userid + ' at ' + result)
-      );
+    did.createUser(userAccount, NAMESPACE, userid).then(userAddress => {
+      console.log('Created user id ' + userid + ' at ' + userAddress);
+      did.setMinimumResponse(userAddress, idpCount);
+    });
   }
 
   if (command === 'request') {
@@ -226,7 +226,7 @@ function startDIDBus() {
     });
   }
 
-  if (command === 'pendingRequest') {
+  if (command === 'getRequest') {
     // console.log('GET PENDING REQUEST ARGV' + JSON.stringify(argv));
     let { host, port, ra, uda, idp, user, userid } = argv;
     let idpAccount = accounts[idp];
@@ -236,8 +236,8 @@ function startDIDBus() {
     });
     did.createUser(userAccount, NAMESPACE, userid).then(userAddress => {
       did
-        .getRequests(userAddress)
-        .then(result => console.log(result[1]['pending']));
+        .getRequestsByUserAddress(userAddress)
+        .then(result => console.log(result[1]));
     });
   }
 
@@ -250,7 +250,7 @@ function startDIDBus() {
       directoryAddress: uda
     });
     did.createUser(userAccount, NAMESPACE, userid).then(userAddress => {
-      did.getRequests(userAddress).then(pendingRequest => {
+      did.getRequestsByUserAddress(userAddress).then(pendingRequest => {
         if (pendingRequest[1]['pending'][rid] != undefined) {
           let requestAddress = pendingRequest[1]['pending'][rid].requestID;
           did
