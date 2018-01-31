@@ -11,11 +11,14 @@ echo 'Starting...'
 ganache-cli --unlock 0,1 > $tmpFile &
 sleep 2 #wait for ganache to start
 
-tmpArr=($(cat $tmpFile | sed '5q;d'))
-IDP_ADDR=${tmpArr[1]}
-
-tmpArr=($(cat $tmpFile | sed '6q;d'))
+tmpArr=($(cat $tmpFile | sed '14q;d'))
 RP_ADDR=${tmpArr[1]}
+
+if[ "$1" == "" ]; then
+  IDP_COUNT=1
+else
+	IDP_COUNT=$1
+fi
 
 cd $(dirname "${BASH_SOURCE[0]}")/blockchain
 rm -f ./build/contracts/*.json
@@ -36,9 +39,15 @@ npm run build
 
 cd ../idp/
 
-#CONDITION_CONTRACT_ADDR=$CONDITION_CONTRACT_ADDR USER_CONTRACT_ADDR=$USER_CONTRACT_ADDR \
-IDP_ADDR=$IDP_ADDR REQUESTS_CONTRACT_ADDR=$REQUESTS_CONTRACT_ADDR \
-DIRECTORY_CONTRACT_ADDR=$DIRECTORY_CONTRACT_ADDR bash -c 'npm start > /tmp/idp.log &'
+while [ $IDP_COUNT -gt 0 ] do
+  tmpArr=($(cat $tmpFile | sed "'$(($IDP_COUNT + 5))q;d'"))
+  IDP_ADDR=${tmpArr[1]}
+  IDP_COUNT=$(($IDP_COUNT - 1))
+  
+  #CONDITION_CONTRACT_ADDR=$CONDITION_CONTRACT_ADDR USER_CONTRACT_ADDR=$USER_CONTRACT_ADDR \
+  IDP_ADDR=$IDP_ADDR REQUESTS_CONTRACT_ADDR=$REQUESTS_CONTRACT_ADDR \
+  DIRECTORY_CONTRACT_ADDR=$DIRECTORY_CONTRACT_ADDR bash -c 'npm start > /tmp/idp.log &'
+done
 
 cd ../rp/
 RP_ADDR=$IDP_ADDR REQUESTS_CONTRACT_ADDR=$REQUESTS_CONTRACT_ADDR \
