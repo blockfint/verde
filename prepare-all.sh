@@ -13,11 +13,12 @@ fi
 npm install -g ganache-cli
 npm install -g truffle
 
-cd $(dirname "${BASH_SOURCE[0]}")/blockchain
+curdir=`pwd`
+cd $curdir/blockchain
 npm install
 
-cd $(dirname "${BASH_SOURCE[0]}")/idp
+cd $curdir/idp
 npm install
 
-cd $(dirname "${BASH_SOURCE[0]}")/rp
+cd $curdir/rp
 npm install
