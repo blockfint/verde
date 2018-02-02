@@ -34,8 +34,7 @@ contract('Requests', function(accounts) {
     console.log('rcount1 ' + requestCount1);
     let request1 = await requests.createRequest(
       user.address,
-      'Release credit record',
-      1
+      'Release credit record'
     );
     let requestCount2 = await requests.getRequestCount();
     console.log('rcount1 ' + requestCount1 + ', type: ' + typeof requestCount1);
@@ -45,8 +44,7 @@ contract('Requests', function(accounts) {
 
     let request2 = await requests.createRequest(
       user.address,
-      'Own 25 watches ?',
-      1
+      'Own 25 watches ?'
     );
     requestCount2 = await requests.getRequestCount();
     assert.equal(2, requestCount2 - requestCount1, 'Count');

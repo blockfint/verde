@@ -11,13 +11,15 @@ Start ganache-cli with option unlock
 Option
   user, rp and idp option is the account index (pick any 0,1,2,3,4).
   rid option is the request index of each userid.
+  idpCount is a number of minimum response OK.
 
 To create user
   npm run didbus \
   -- createUser \
   --rp 0 \
   --user 4 \
-  --userid 11111
+  --userid 11111 \
+  --idpCount 3
 
 To create request
   npm run didbus \
@@ -28,8 +30,8 @@ To create request
 
 To get pending request
   npm run didbus \
-  -- pendingRequest \
-  --idp 1 \
+  -- getRequest \
+  --rp 0 \
   --user 4 \
   --userid 11111
 

@@ -80,9 +80,9 @@ export default class {
   * Returns
   *   requestID : string
   */
-  createRequest(userAddress, requestText, idpCount) {
+  createRequest(userAddress, requestText) {
     return this.requests
-      .createRequest(userAddress, requestText, idpCount)
+      .createRequest(userAddress, requestText)
       .then(result => {
         for (var i in result.logs) {
           if (result.logs[i].event === 'LogRequest')
@@ -102,7 +102,7 @@ export default class {
   * Parameters
   *   ownerAddress : string
   *   namespace    : string
-  *   namespace    : string
+  *   id           : string
   * Returns
   *   userContractAddress : string
   */
@@ -141,6 +141,20 @@ export default class {
         return Promise.resolve(result);
       })
       .catch(console.log.bind(console));
+  }
+
+  async setMinimumResponse(userAddress, idpCount) {
+    let user = this.user.at(userAddress);
+    let conditionAddr = await user.conditionContract();
+    let condition = this.condition.at(conditionAddr);
+    await condition.setMinimumResponseOKCount(idpCount);
+  }
+
+  async getMinimumResponse(userAddress) {
+    let user = this.user.at(userAddress);
+    let conditionAddr = await user.conditionContract();
+    let condition = this.condition.at(conditionAddr);
+    return await condition.minimumResponseOKCount();
   }
 
   findUserAddress(namespace = 'cid', id) {
@@ -187,6 +201,52 @@ export default class {
     // eslint-disable-next-line babel/new-cap
     var event = this.request.at(requestId).LogConditionComplete();
     event.watch(callback);
+  }
+
+  async getRequestsByUserAddress(userAddress) {
+    try {
+      let count = await this.requests.getRequestCount();
+      let pendingList = [],
+        approvedList = [],
+        deniedList = [];
+      for (let i = 0; i < count; i++) {
+        let requestID = await this.requests.getRequest(i);
+        let tmpRequest = this.request.at(requestID);
+        let responseID = await tmpRequest.getIdpResponse();
+        let tmpResponse = this.response.at(responseID);
+        if ((await tmpRequest.userAddress()) == userAddress) {
+          let targetRequest = {
+            requestID: requestID,
+            userAddress: await tmpRequest.userAddress(),
+            rpAddress: await tmpRequest.rpAddress(),
+            requestText: await tmpRequest.requestText()
+          };
+          if (
+            (await tmpResponse.getResponseCount()) <
+            (await this.getMinimumResponse(userAddress))
+          ) {
+            pendingList.push(targetRequest);
+          } else {
+            if (await tmpRequest.authenticationComplete()) {
+              approvedList.push(targetRequest);
+            } else {
+              deniedList.push(targetRequest);
+            }
+          }
+        }
+      }
+      return [
+        null,
+        {
+          pending: pendingList,
+          approved: approvedList,
+          denied: deniedList
+        }
+      ];
+    } catch (error) {
+      console.error('Cannot get pending', error);
+      return [error, null];
+    }
   }
 
   async getRequests(userAddress) {

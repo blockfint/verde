@@ -96,6 +96,10 @@ function findUserAddress(namespace, id) {
   return directoryContract.findUserAddress(namespace, id);
 }
 
+function setMinimumIdpForUser(userAddress, newValue) {
+  return idpContract.setMinimumResponse(userAddress, newValue);
+}
+
 export const ethereumInterface = {
   createRequest,
   watchRequestEvent,
@@ -119,7 +123,8 @@ export const idpInterface = {
   getRequests,
   addIdpResponse,
   createUser,
-  findUserAddress
+  findUserAddress,
+  setMinimumIdpForUser
 };
 
 export default ethereumInterface;

@@ -50,8 +50,20 @@ export function listen(handleRequest) {
   });
 }
 
-export function createUser(id,namespace = 'cid') {
+export async function createUser(id,namespace = 'cid') {
   return idpInterface.createUser(namespace,id);
+}
+
+export async function setMinimumIdpForUser(id ,namespace = 'cid' , newValue = 1) {
+  let userAddress = await idpInterface.findUserAddress(namespace,id);
+  try {
+    await idpInterface.setMinimumIdpForUser(userAddress, newValue);
+    return true;
+  }
+  catch(error) {
+    console.log("Can not set min approve:",error)
+    return false;
+  }
 }
 
 const busInterface = {
@@ -65,4 +77,9 @@ const busInterface = {
 export default busInterface; 
 
 //HARD CODED USER
-createUser('1100023145268');
+async function hardInit() {
+  console.log('createUser',await createUser('1100023145268'));
+  setMinimumIdpForUser('1100023145268','cid', process.env.MIN_APPROVE );
+}
+
+hardInit();

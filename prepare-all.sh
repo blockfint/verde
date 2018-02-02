@@ -22,3 +22,5 @@ npm install
 
 cd $curdir/rp
 npm install
+
+echo 'All installation done'

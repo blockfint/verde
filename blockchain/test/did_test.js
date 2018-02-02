@@ -161,14 +161,76 @@ contract('DID', function(accounts) {
   });
 
   it('should response to the request', async () => {
+    let ownerAddress = accounts[2];
+    let userAddress = await did.createUser(ownerAddress, 'cid', '11111');
+    await did.setMinimumResponse(userAddress, 3);
+
+    var rtext = 'Release credit record';
+    let requestID = await did.createRequest(userAddress, rtext);
+    console.log('request ID 1 ' + requestID + ', type: ' + typeof requestID);
+    // let request = await Request.at(requestID);
+
+    var rtext_2 = 'Pay for Blockfint ICO';
+    let requestID_2 = await did.createRequest(userAddress, rtext_2);
+    console.log(
+      'request ID 2 ' + requestID_2 + ', type: ' + typeof requestID_2
+    );
+
+    let requestResult = await did.getRequestsByUserAddress(userAddress);
+    assert.equal(
+      2,
+      requestResult[1]['pending'].length,
+      'should have 2 pending request'
+    );
+
+    await did.addIdpResponse(requestID, 0, 'OK');
+    await did.addIdpResponse(requestID, 0, 'OK');
+    await did.addIdpResponse(requestID, 0, 'OK');
+
+    requestResult = await did.getRequestsByUserAddress(userAddress);
+    assert.equal(
+      1,
+      requestResult[1]['pending'].length,
+      'should have 1 pending request'
+    );
+
+    assert.equal(
+      1,
+      requestResult[1]['approved'].length,
+      'should have 1 approved request'
+    );
+
+    await did.addIdpResponse(requestID_2, 0, 'OK');
+    await did.addIdpResponse(requestID_2, 1, 'Not OK');
+    await did.addIdpResponse(requestID_2, 1, 'Not OK');
+
+    requestResult = await did.getRequestsByUserAddress(userAddress);
+    assert.equal(
+      0,
+      requestResult[1]['pending'].length,
+      'should have 0 pending request'
+    );
+
+    assert.equal(
+      1,
+      requestResult[1]['approved'].length,
+      'should have 1 approved request'
+    );
+
+    assert.equal(
+      1,
+      requestResult[1]['denied'].length,
+      'should have 1 denied request'
+    );
+
     // use did
-    console.log('About to add IDP Response');
+    // console.log('About to add IDP Response');
     // Here we get an error because request is a string but the smart contract
     // treat is as object
     // await did.addIdpResponse(request, 0, 'OK');
     // console.log("Added IDP Response");
-    let result = await requestContractInstance.authenticationComplete();
-    assert.equal(false, result, 'Should not complete yet.');
+    // let result = await requestContractInstance.authenticationComplete();
+    // assert.equal(false, result, 'Should not complete yet.');
 
     // use request object directly. The responder would be accounts[1].
     /*

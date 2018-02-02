@@ -1,5 +1,6 @@
 import path from 'path';
 import http from 'http';
+import io from 'socket.io';
 
 import bodyParser from 'body-parser';
 
@@ -53,6 +54,18 @@ app.post('/createUser/', async function(req,res) {
 });
 
 const server = http.createServer(app);
+
+const ws = io(server);
+let socket;
+
+ws.on('connection', function(_socket){
+  socket = _socket;
+});
+
+GreenBoxAPI.listen(function(data) {
+  if(socket) socket.emit('fetch');
+});
+
 server.listen(WEB_SERVER_PORT);
 
 console.log(`IDP Web Server is running. Listening to port ${WEB_SERVER_PORT}`);

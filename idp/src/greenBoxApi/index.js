@@ -1,6 +1,6 @@
 import busInterface from './busInterface';
 
-function handleRequest({ userAddress, requestId, rpAddress, data }) {
+/*function handleRequest({ userAddress, requestId, rpAddress, data }) {
   console.log(
     'Received new request for userAddress:',
     userAddress,
@@ -15,6 +15,6 @@ function handleRequest({ userAddress, requestId, rpAddress, data }) {
 }
 
 //===== listen to Bus =====
-busInterface.listen(handleRequest);
+busInterface.listen(handleRequest);*/
 
 export default busInterface
