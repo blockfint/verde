@@ -13,14 +13,18 @@ fi
 npm install -g ganache-cli
 npm install -g truffle
 
-curdir=`pwd`
-cd $curdir/blockchain
+#====== In case script is run from other directory =======
+cd `dirname $0`
+scriptdir=$(pwd)
+#=========================================================
+
+cd "$scriptdir/blockchain"
 npm install
 
-cd $curdir/idp
+cd "$scriptdir/idp"
 npm install
 
-cd $curdir/rp
+cd "$scriptdir/rp"
 npm install
 
 echo 'All installation done'
